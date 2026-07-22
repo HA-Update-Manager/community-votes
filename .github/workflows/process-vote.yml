@@ -95,10 +95,21 @@ jobs:
               return;
             }
 
+            // A leading v/V immediately before a digit is stripped, so a
+            // human-typed "1.2.3" and one derived from a GitHub release tag
+            // "v1.2.3" land on the exact same vote path either way. Kept in
+            // sync with ha-update-manager's own hacs_identity.py, found
+            // live 2026-07-22 (see that module's own comment for how this
+            // was discovered).
+            function normalizeVersion(version) {
+              const m = version.match(/^[vV](\d.*)$/);
+              return m ? m[1] : version;
+            }
+
             // --- 2. Parse ---
             const fields = parseFields(issue.body || "");
             const category = (fields["Category"] || "").trim();
-            const version = (fields["Version"] || "").trim();
+            const version = normalizeVersion((fields["Version"] || "").trim());
             const verdict = (fields["Verdict"] || "").trim();
             const reasonCategory = (fields["Reason category"] || "").trim();
 
