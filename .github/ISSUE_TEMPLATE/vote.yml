@@ -1,0 +1,98 @@
+name: Stem uitbrengen
+description: Geef je oordeel over een update (probleemloos of problematisch)
+title: "[stem] "
+labels:
+  - vote
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vul precies de velden in die bij jouw gekozen categorie horen, laat de rest leeg.
+        Een community-oordeel is een verzamelde mening, geen garantie, zeker niet bij
+        veiligheidsgevoelige apparaten (sloten, alarmen, rookmelders). Zie de root-README
+        voor de volledige disclaimer.
+
+  - type: dropdown
+    id: categorie
+    attributes:
+      label: Categorie
+      description: Wat voor soort update betreft dit?
+      options:
+        - home-assistant
+        - hacs
+        - devices
+        - apps
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: 'Alleen bij categorie "home-assistant": core, supervisor, of os'
+      placeholder: core
+
+  - type: input
+    id: owner_repo
+    attributes:
+      label: Owner/repo
+      description: 'Alleen bij categorie "hacs". Formaat: owner/repo, bijvoorbeeld HA-Update-Manager/ha-update-manager'
+      placeholder: owner/repo
+
+  - type: input
+    id: merk_model
+    attributes:
+      label: Merk/model
+      description: 'Alleen bij categorie "devices". Formaat: merk/model'
+      placeholder: merk/model
+
+  - type: input
+    id: app_slug
+    attributes:
+      label: App-slug
+      description: 'Alleen bij categorie "apps"'
+      placeholder: mijn-app-slug
+
+  - type: input
+    id: versie
+    attributes:
+      label: Versie
+      description: De versie waar dit oordeel over gaat
+      placeholder: 1.2.3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: oordeel
+    attributes:
+      label: Oordeel
+      options:
+        - probleemloos
+        - problematisch
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reden_categorie
+    attributes:
+      label: Reden-categorie
+      description: 'Verplicht bij oordeel "problematisch"'
+      options:
+        - (niet van toepassing, oordeel is probleemloos)
+        - functionaliteit kapot
+        - vereist nieuwere HA-versie
+        - is een dev/pre-release-build
+        - breaking change
+        - anders
+
+  - type: textarea
+    id: toelichting
+    attributes:
+      label: Toelichting
+      description: Vrije tekst, aangemoedigd bij "functionaliteit kapot"
+
+  - type: input
+    id: link
+    attributes:
+      label: Issue- of changelog-link
+      placeholder: "https://github.com/.../issues/123"

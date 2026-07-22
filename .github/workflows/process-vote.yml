@@ -1,0 +1,235 @@
+name: Process vote
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  process:
+    if: contains(github.event.issue.labels.*.name, 'vote')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+
+            async function comment(body) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number, body,
+              });
+            }
+
+            async function closeIssue() {
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number, state: "closed",
+              });
+            }
+
+            async function readJson(path) {
+              try {
+                const res = await github.rest.repos.getContent({ owner, repo, path });
+                const content = Buffer.from(res.data.content, "base64").toString("utf8");
+                return JSON.parse(content);
+              } catch (err) {
+                if (err.status === 404) return null;
+                throw err;
+              }
+            }
+
+            async function writeJson(path, data, message) {
+              let sha;
+              try {
+                const existing = await github.rest.repos.getContent({ owner, repo, path });
+                sha = existing.data.sha;
+              } catch (err) {
+                if (err.status !== 404) throw err;
+              }
+              const content = Buffer.from(JSON.stringify(data, null, 2) + "\n").toString("base64");
+              await github.rest.repos.createOrUpdateFileContents({
+                owner, repo, path, message, content, sha,
+              });
+            }
+
+            async function listDir(path) {
+              try {
+                const res = await github.rest.repos.getContent({ owner, repo, path });
+                return Array.isArray(res.data) ? res.data : [];
+              } catch (err) {
+                if (err.status === 404) return [];
+                throw err;
+              }
+            }
+
+            // Issue Forms render each field as "### Label" followed by the
+            // answer (or "_No response_" for an empty optional field). Labels
+            // are kept deliberately clean in vote.yml (no parenthetical
+            // instructions in the label text itself) so this split stays
+            // simple.
+            function parseFields(body) {
+              const fields = {};
+              const blocks = body.split(/\n(?=### )/);
+              for (const block of blocks) {
+                const m = block.match(/^### (.+?)\n([\s\S]*)$/);
+                if (!m) continue;
+                const label = m[1].trim();
+                let value = m[2].trim();
+                if (value === "_No response_") value = "";
+                fields[label] = value;
+              }
+              return fields;
+            }
+
+            // --- 1. Banned check ---
+            const banned = (await readJson("moderation/banned-users.json")) || [];
+            if (banned.map((u) => u.toLowerCase()).includes(author.toLowerCase())) {
+              await comment("Dit account kan geen stemmen indienen.");
+              await closeIssue();
+              return;
+            }
+
+            // --- 2. Parse ---
+            const fields = parseFields(issue.body || "");
+            const categorie = (fields["Categorie"] || "").trim();
+            const versie = (fields["Versie"] || "").trim();
+            const oordeel = (fields["Oordeel"] || "").trim();
+            const redenCategorie = (fields["Reden-categorie"] || "").trim();
+
+            const VALID_CATEGORIES = ["home-assistant", "hacs", "devices", "apps"];
+            const VALID_OORDELEN = ["probleemloos", "problematisch"];
+            const VALID_REDENEN = [
+              "functionaliteit kapot",
+              "vereist nieuwere HA-versie",
+              "is een dev/pre-release-build",
+              "breaking change",
+              "anders",
+            ];
+
+            function reject(reason) {
+              return comment(`Deze stem kon niet verwerkt worden: ${reason}`).then(closeIssue);
+            }
+
+            if (!VALID_CATEGORIES.includes(categorie)) {
+              await reject(`onbekende categorie "${categorie}".`);
+              return;
+            }
+            if (!versie) {
+              await reject("versie ontbreekt.");
+              return;
+            }
+            if (!VALID_OORDELEN.includes(oordeel)) {
+              await reject(`onbekend oordeel "${oordeel}".`);
+              return;
+            }
+            if (oordeel === "problematisch" && !VALID_REDENEN.includes(redenCategorie)) {
+              await reject('reden-categorie is verplicht en moet geldig zijn bij oordeel "problematisch".');
+              return;
+            }
+
+            // --- 3. Identity segments per category, and cross-check that
+            // only the fields belonging to the chosen category were filled in.
+            let identitySegments = null;
+            let hacsOwner = null;
+
+            const component = (fields["Component"] || "").trim();
+            const ownerRepo = (fields["Owner/repo"] || "").trim();
+            const merkModel = (fields["Merk/model"] || "").trim();
+            const appSlug = (fields["App-slug"] || "").trim();
+
+            if (categorie === "home-assistant") {
+              if (!["core", "supervisor", "os"].includes(component)) {
+                await reject('component moet "core", "supervisor", of "os" zijn.');
+                return;
+              }
+              identitySegments = [component];
+            } else if (categorie === "hacs") {
+              const parts = ownerRepo.split("/");
+              if (parts.length !== 2 || !parts[0] || !parts[1]) {
+                await reject('owner/repo moet het formaat "owner/repo" hebben.');
+                return;
+              }
+              hacsOwner = parts[0];
+              identitySegments = parts;
+            } else if (categorie === "devices") {
+              const parts = merkModel.split("/");
+              if (parts.length !== 2 || !parts[0] || !parts[1]) {
+                await reject('merk/model moet het formaat "merk/model" hebben.');
+                return;
+              }
+              identitySegments = parts;
+            } else if (categorie === "apps") {
+              if (!appSlug) {
+                await reject("app-slug ontbreekt.");
+                return;
+              }
+              identitySegments = [appSlug];
+            }
+
+            const dir = ["votes", categorie, ...identitySegments, versie].join("/");
+            const votePath = `${dir}/${author}.json`;
+            const verdictPath = `${dir}/_verdict.json`;
+
+            // --- 4. Duplicate check: create-only, 1 stem per persoon per versie ---
+            const existingVote = await readJson(votePath);
+            if (existingVote) {
+              await comment("Je hebt al eerder gestemd op deze versie, deze stem is niet opnieuw geregistreerd.");
+              await closeIssue();
+              return;
+            }
+
+            // --- 5. Asymmetrisch gewicht voor de repo-owner zelf (alleen hacs) ---
+            let weight = 1;
+            if (hacsOwner && author.toLowerCase() === hacsOwner.toLowerCase() && oordeel === "probleemloos") {
+              weight = 0;
+            }
+
+            // --- 6. Stembestand wegschrijven ---
+            const voteData = {
+              oordeel,
+              reden_categorie: oordeel === "problematisch" ? redenCategorie : null,
+              toelichting: fields["Toelichting"] || null,
+              link: fields["Issue- of changelog-link"] || null,
+              weight,
+              created_at: new Date().toISOString(),
+            };
+            await writeJson(votePath, voteData, `Stem van ${author}: ${categorie}/${identitySegments.join("/")}/${versie}`);
+
+            // --- 7. _verdict.json herberekenen (alleen deze ene map, geen volledige repo) ---
+            const entries = await listDir(dir);
+            let aantalProbleemloos = 0;
+            let aantalProblematisch = 0;
+            for (const entry of entries) {
+              if (entry.name === "_verdict.json" || entry.type !== "file") continue;
+              const data = await readJson(entry.path);
+              if (!data) continue;
+              const w = typeof data.weight === "number" ? data.weight : 1;
+              if (data.oordeel === "probleemloos") aantalProbleemloos += w;
+              else if (data.oordeel === "problematisch") aantalProblematisch += w;
+            }
+
+            const siteConfig = (await readJson("config/site.json")) || { quorum: 3 };
+            const quorum = siteConfig.quorum;
+            const verdict = {
+              aantal_probleemloos: aantalProbleemloos,
+              aantal_problematisch: aantalProblematisch,
+              quorum,
+              quorum_bereikt: aantalProbleemloos >= quorum,
+              auto_install_geschikt: aantalProblematisch === 0 && aantalProbleemloos >= quorum,
+              updated_at: new Date().toISOString(),
+            };
+            await writeJson(verdictPath, verdict, `Verdict bijgewerkt: ${categorie}/${identitySegments.join("/")}/${versie}`);
+
+            // --- 8. Afsluiten ---
+            await comment(
+              `Bedankt voor je stem! Huidige stand voor \`${categorie}/${identitySegments.join("/")}/${versie}\`: ` +
+              `${verdict.aantal_probleemloos} probleemloos, ${verdict.aantal_problematisch} problematisch ` +
+              `(quorum: ${verdict.quorum}).`
+            );
+            await closeIssue();
