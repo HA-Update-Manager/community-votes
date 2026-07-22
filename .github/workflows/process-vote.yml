@@ -90,46 +90,47 @@ jobs:
             // --- 1. Banned check ---
             const banned = (await readJson("moderation/banned-users.json")) || [];
             if (banned.map((u) => u.toLowerCase()).includes(author.toLowerCase())) {
-              await comment("Dit account kan geen stemmen indienen.");
+              await comment("This account is not allowed to submit votes.");
               await closeIssue();
               return;
             }
 
             // --- 2. Parse ---
             const fields = parseFields(issue.body || "");
-            const categorie = (fields["Categorie"] || "").trim();
-            const versie = (fields["Versie"] || "").trim();
-            const oordeel = (fields["Oordeel"] || "").trim();
-            const redenCategorie = (fields["Reden-categorie"] || "").trim();
+            const category = (fields["Category"] || "").trim();
+            const version = (fields["Version"] || "").trim();
+            const verdict = (fields["Verdict"] || "").trim();
+            const reasonCategory = (fields["Reason category"] || "").trim();
 
             const VALID_CATEGORIES = ["home-assistant", "hacs", "devices", "apps"];
-            const VALID_OORDELEN = ["probleemloos", "problematisch"];
-            const VALID_REDENEN = [
-              "functionaliteit kapot",
-              "vereist nieuwere HA-versie",
-              "is een dev/pre-release-build",
+            const VALID_VERDICTS = ["healthy", "problematic"];
+            const VALID_REASONS = [
+              "broken functionality",
+              "requires a newer HA version",
+              "is a dev/pre-release build",
               "breaking change",
-              "anders",
+              "other",
             ];
 
-            function reject(reason) {
-              return comment(`Deze stem kon niet verwerkt worden: ${reason}`).then(closeIssue);
+            async function reject(reason) {
+              await comment(`This vote could not be processed: ${reason}`);
+              await closeIssue();
             }
 
-            if (!VALID_CATEGORIES.includes(categorie)) {
-              await reject(`onbekende categorie "${categorie}".`);
+            if (!VALID_CATEGORIES.includes(category)) {
+              await reject(`unknown category "${category}".`);
               return;
             }
-            if (!versie) {
-              await reject("versie ontbreekt.");
+            if (!version) {
+              await reject("version is missing.");
               return;
             }
-            if (!VALID_OORDELEN.includes(oordeel)) {
-              await reject(`onbekend oordeel "${oordeel}".`);
+            if (!VALID_VERDICTS.includes(verdict)) {
+              await reject(`unknown verdict "${verdict}".`);
               return;
             }
-            if (oordeel === "problematisch" && !VALID_REDENEN.includes(redenCategorie)) {
-              await reject('reden-categorie is verplicht en moet geldig zijn bij oordeel "problematisch".');
+            if (verdict === "problematic" && !VALID_REASONS.includes(reasonCategory)) {
+              await reject('reason category is required and must be valid when verdict is "problematic".');
               return;
             }
 
@@ -140,96 +141,96 @@ jobs:
 
             const component = (fields["Component"] || "").trim();
             const ownerRepo = (fields["Owner/repo"] || "").trim();
-            const merkModel = (fields["Merk/model"] || "").trim();
-            const appSlug = (fields["App-slug"] || "").trim();
+            const manufacturerModel = (fields["Manufacturer/model"] || "").trim();
+            const appSlug = (fields["App slug"] || "").trim();
 
-            if (categorie === "home-assistant") {
+            if (category === "home-assistant") {
               if (!["core", "supervisor", "os"].includes(component)) {
-                await reject('component moet "core", "supervisor", of "os" zijn.');
+                await reject('component must be "core", "supervisor", or "os".');
                 return;
               }
               identitySegments = [component];
-            } else if (categorie === "hacs") {
+            } else if (category === "hacs") {
               const parts = ownerRepo.split("/");
               if (parts.length !== 2 || !parts[0] || !parts[1]) {
-                await reject('owner/repo moet het formaat "owner/repo" hebben.');
+                await reject('owner/repo must be in the format "owner/repo".');
                 return;
               }
               hacsOwner = parts[0];
               identitySegments = parts;
-            } else if (categorie === "devices") {
-              const parts = merkModel.split("/");
+            } else if (category === "devices") {
+              const parts = manufacturerModel.split("/");
               if (parts.length !== 2 || !parts[0] || !parts[1]) {
-                await reject('merk/model moet het formaat "merk/model" hebben.');
+                await reject('manufacturer/model must be in the format "manufacturer/model".');
                 return;
               }
               identitySegments = parts;
-            } else if (categorie === "apps") {
+            } else if (category === "apps") {
               if (!appSlug) {
-                await reject("app-slug ontbreekt.");
+                await reject("app slug is missing.");
                 return;
               }
               identitySegments = [appSlug];
             }
 
-            const dir = ["votes", categorie, ...identitySegments, versie].join("/");
+            const dir = ["votes", category, ...identitySegments, version].join("/");
             const votePath = `${dir}/${author}.json`;
             const verdictPath = `${dir}/_verdict.json`;
 
-            // --- 4. Duplicate check: create-only, 1 stem per persoon per versie ---
+            // --- 4. Duplicate check: create-only, 1 vote per person per version ---
             const existingVote = await readJson(votePath);
             if (existingVote) {
-              await comment("Je hebt al eerder gestemd op deze versie, deze stem is niet opnieuw geregistreerd.");
+              await comment("You already voted on this version, this vote was not recorded again.");
               await closeIssue();
               return;
             }
 
-            // --- 5. Asymmetrisch gewicht voor de repo-owner zelf (alleen hacs) ---
+            // --- 5. Asymmetric weight for the repo owner (hacs only) ---
             let weight = 1;
-            if (hacsOwner && author.toLowerCase() === hacsOwner.toLowerCase() && oordeel === "probleemloos") {
+            if (hacsOwner && author.toLowerCase() === hacsOwner.toLowerCase() && verdict === "healthy") {
               weight = 0;
             }
 
-            // --- 6. Stembestand wegschrijven ---
+            // --- 6. Write the vote file ---
             const voteData = {
-              oordeel,
-              reden_categorie: oordeel === "problematisch" ? redenCategorie : null,
-              toelichting: fields["Toelichting"] || null,
-              link: fields["Issue- of changelog-link"] || null,
+              verdict,
+              reason_category: verdict === "problematic" ? reasonCategory : null,
+              notes: fields["Notes"] || null,
+              link: fields["Issue or changelog link"] || null,
               weight,
               created_at: new Date().toISOString(),
             };
-            await writeJson(votePath, voteData, `Stem van ${author}: ${categorie}/${identitySegments.join("/")}/${versie}`);
+            await writeJson(votePath, voteData, `Vote from ${author}: ${category}/${identitySegments.join("/")}/${version}`);
 
-            // --- 7. _verdict.json herberekenen (alleen deze ene map, geen volledige repo) ---
+            // --- 7. Recompute _verdict.json (only this one version directory, not the whole repo) ---
             const entries = await listDir(dir);
-            let aantalProbleemloos = 0;
-            let aantalProblematisch = 0;
+            let healthyCount = 0;
+            let problematicCount = 0;
             for (const entry of entries) {
               if (entry.name === "_verdict.json" || entry.type !== "file") continue;
               const data = await readJson(entry.path);
               if (!data) continue;
               const w = typeof data.weight === "number" ? data.weight : 1;
-              if (data.oordeel === "probleemloos") aantalProbleemloos += w;
-              else if (data.oordeel === "problematisch") aantalProblematisch += w;
+              if (data.verdict === "healthy") healthyCount += w;
+              else if (data.verdict === "problematic") problematicCount += w;
             }
 
             const siteConfig = (await readJson("config/site.json")) || { quorum: 3 };
             const quorum = siteConfig.quorum;
-            const verdict = {
-              aantal_probleemloos: aantalProbleemloos,
-              aantal_problematisch: aantalProblematisch,
+            const computedVerdict = {
+              healthy_count: healthyCount,
+              problematic_count: problematicCount,
               quorum,
-              quorum_bereikt: aantalProbleemloos >= quorum,
-              auto_install_geschikt: aantalProblematisch === 0 && aantalProbleemloos >= quorum,
+              quorum_reached: healthyCount >= quorum,
+              auto_install_eligible: problematicCount === 0 && healthyCount >= quorum,
               updated_at: new Date().toISOString(),
             };
-            await writeJson(verdictPath, verdict, `Verdict bijgewerkt: ${categorie}/${identitySegments.join("/")}/${versie}`);
+            await writeJson(verdictPath, computedVerdict, `Verdict updated: ${category}/${identitySegments.join("/")}/${version}`);
 
-            // --- 8. Afsluiten ---
+            // --- 8. Close out ---
             await comment(
-              `Bedankt voor je stem! Huidige stand voor \`${categorie}/${identitySegments.join("/")}/${versie}\`: ` +
-              `${verdict.aantal_probleemloos} probleemloos, ${verdict.aantal_problematisch} problematisch ` +
-              `(quorum: ${verdict.quorum}).`
+              `Thanks for your vote! Current standing for \`${category}/${identitySegments.join("/")}/${version}\`: ` +
+              `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic ` +
+              `(quorum: ${computedVerdict.quorum}).`
             );
             await closeIssue();
