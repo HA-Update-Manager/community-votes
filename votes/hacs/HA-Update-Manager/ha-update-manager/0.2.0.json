@@ -1,0 +1,25 @@
+{
+  "jumps": {
+    "a8b49eb": {
+      "votes": {
+        "klaptafel": {
+          "verdict": "healthy",
+          "reason_category": null,
+          "notes": null,
+          "link": null,
+          "weight": 1,
+          "created_at": "2026-07-24T11:49:15.269Z",
+          "updated_at": null
+        }
+      },
+      "verdict": {
+        "healthy_count": 1,
+        "problematic_count": 0,
+        "quorum": 3,
+        "quorum_reached": false,
+        "auto_install_eligible": false,
+        "updated_at": "2026-07-24T11:49:15.269Z"
+      }
+    }
+  }
+}
