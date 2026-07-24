@@ -12,6 +12,14 @@ body:
         safety-relevant devices (locks, alarms, smoke detectors). See the root README
         for the full disclaimer.
 
+        Changed your mind since an earlier vote on this same version jump? Just vote again,
+        it replaces your previous one instead of being rejected as a duplicate.
+
+        A verdict is about a specific jump (the version you upgraded from, and the one you
+        landed on), not just the destination version -- going from 0.1.0 to 3.5.2 can carry
+        very different risk than going from 3.5.1 to 3.5.2, even though both land on the
+        same version.
+
   - type: dropdown
     id: category
     attributes:
@@ -54,11 +62,20 @@ body:
       placeholder: my-app-slug
 
   - type: input
+    id: from_version
+    attributes:
+      label: From version
+      description: The version you upgraded from
+      placeholder: 3.5.1
+    validations:
+      required: true
+
+  - type: input
     id: version
     attributes:
-      label: Version
-      description: The version this verdict is about
-      placeholder: 1.2.3
+      label: To version
+      description: The version you landed on -- this verdict is about that specific jump, not the version alone
+      placeholder: 3.5.2
     validations:
       required: true
 

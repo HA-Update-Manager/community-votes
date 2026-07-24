@@ -28,14 +28,21 @@ closes with a confirmation.
 No account linking beyond a regular GitHub login is needed: this repo
 requires no fork and no separate app installation on your side.
 
-You can vote once per person per exact version. A second vote on the same
-version is ignored, not overwritten.
+A verdict is about a specific jump: the version you upgraded *from*, and the
+one you landed on, not just the destination version alone. Going from 0.1.0
+to 3.5.2 (possibly skipping several breaking changes along the way) can carry
+very different risk than going from 3.5.1 to 3.5.2, even though both land on
+the same version -- so both fields are required. You can vote once per person
+per exact jump. A second vote on the same jump overwrites your previous one
+(its own `created_at` is preserved, only `updated_at` moves).
 
 ## Reading
 
 Every file under `votes/` is a plain, public JSON file, readable directly via
-`raw.githubusercontent.com`, no account or API rate limit needed. See
-`votes/README.md` for the path structure.
+`raw.githubusercontent.com`, no account or API rate limit needed. One file per
+destination version holds every jump (every distinct `from_version`) that's
+been rated for it, and every voter's own entry within that jump -- see
+`votes/README.md` for the exact structure.
 
 ## Moderation
 

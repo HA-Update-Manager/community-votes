@@ -44,27 +44,45 @@ jobs:
               }
             }
 
-            async function writeJson(path, data, message) {
-              let sha;
-              try {
-                const existing = await github.rest.repos.getContent({ owner, repo, path });
-                sha = existing.data.sha;
-              } catch (err) {
-                if (err.status !== 404) throw err;
-              }
-              const content = Buffer.from(JSON.stringify(data, null, 2) + "\n").toString("base64");
-              await github.rest.repos.createOrUpdateFileContents({
-                owner, repo, path, message, content, sha,
-              });
+            function sleep(ms) {
+              return new Promise((resolve) => setTimeout(resolve, ms));
             }
 
-            async function listDir(path) {
-              try {
-                const res = await github.rest.repos.getContent({ owner, repo, path });
-                return Array.isArray(res.data) ? res.data : [];
-              } catch (err) {
-                if (err.status === 404) return [];
-                throw err;
+            // Read-modify-write with retry on a conflicting write (someone else
+            // wrote to this same file between our read and our write). One file
+            // per destination version now holds every from-version jump's votes,
+            // so two different people voting on two different jumps to the same
+            // destination genuinely race on this same file -- this didn't used to
+            // be possible when each vote lived in its own per-author file.
+            // Refetches content + sha fresh on every attempt, so a losing writer's
+            // own change is never lost: it just gets re-applied on top of the
+            // winner's already-merged content next attempt. A small random delay
+            // between attempts keeps two racing runs from retrying in lockstep and
+            // colliding again every round. On true exhaustion (repeated conflicts,
+            // or any non-conflict failure), this throws and the whole Action run
+            // fails -- the triggering issue is simply left open/unprocessed, never
+            // destroyed, same as any other exception in this workflow.
+            async function writeJsonWithRetry(path, mutate, message, maxAttempts = 5) {
+              for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                let sha;
+                let current = null;
+                try {
+                  const existing = await github.rest.repos.getContent({ owner, repo, path });
+                  sha = existing.data.sha;
+                  current = JSON.parse(Buffer.from(existing.data.content, "base64").toString("utf8"));
+                } catch (err) {
+                  if (err.status !== 404) throw err;
+                }
+                const next = mutate(current);
+                const content = Buffer.from(JSON.stringify(next, null, 2) + "\n").toString("base64");
+                try {
+                  await github.rest.repos.createOrUpdateFileContents({ owner, repo, path, message, content, sha });
+                  return next;
+                } catch (err) {
+                  const isConflict = err.status === 409 || err.status === 422;
+                  if (!isConflict || attempt === maxAttempts - 1) throw err;
+                  await sleep(200 + Math.floor(Math.random() * 300));
+                }
               }
             }
 
@@ -100,7 +118,10 @@ jobs:
             // "v1.2.3" land on the exact same vote path either way. Kept in
             // sync with ha-update-manager's own hacs_identity.py, found
             // live 2026-07-22 (see that module's own comment for how this
-            // was discovered).
+            // was discovered). Applied to both endpoints of the jump now,
+            // not just the destination -- from_version most often comes
+            // from an update entity's own installed_version attribute,
+            // which is just as likely to carry a stray "v" prefix.
             function normalizeVersion(version) {
               const m = version.match(/^[vV](\d.*)$/);
               return m ? m[1] : version;
@@ -109,7 +130,8 @@ jobs:
             // --- 2. Parse ---
             const fields = parseFields(issue.body || "");
             const category = (fields["Category"] || "").trim();
-            const version = normalizeVersion((fields["Version"] || "").trim());
+            const fromVersion = normalizeVersion((fields["From version"] || "").trim());
+            const toVersion = normalizeVersion((fields["To version"] || "").trim());
             const verdict = (fields["Verdict"] || "").trim();
             const reasonCategory = (fields["Reason category"] || "").trim();
 
@@ -132,8 +154,12 @@ jobs:
               await reject(`unknown category "${category}".`);
               return;
             }
-            if (!version) {
-              await reject("version is missing.");
+            if (!fromVersion) {
+              await reject("from version is missing.");
+              return;
+            }
+            if (!toVersion) {
+              await reject("to version is missing.");
               return;
             }
             if (!VALID_VERDICTS.includes(verdict)) {
@@ -184,63 +210,74 @@ jobs:
               identitySegments = [appSlug];
             }
 
-            const dir = ["votes", category, ...identitySegments, version].join("/");
-            const votePath = `${dir}/${author}.json`;
-            const verdictPath = `${dir}/_verdict.json`;
+            // One flat file per destination version, holding every jump
+            // (from_version) that's ever been rated for it -- see the
+            // repo's own README for why this is one file rather than one
+            // per jump or one per voter.
+            const toVersionPath = ["votes", category, ...identitySegments, `${toVersion}.json`].join("/");
 
-            // --- 4. Duplicate check: create-only, 1 vote per person per version ---
-            const existingVote = await readJson(votePath);
-            if (existingVote) {
-              await comment("You already voted on this version, this vote was not recorded again.");
-              await closeIssue();
-              return;
-            }
-
-            // --- 5. Asymmetric weight for the repo owner (hacs only) ---
+            // --- 4. Asymmetric weight for the repo owner (hacs only) ---
             let weight = 1;
             if (hacsOwner && author.toLowerCase() === hacsOwner.toLowerCase() && verdict === "healthy") {
               weight = 0;
             }
 
-            // --- 6. Write the vote file ---
-            const voteData = {
-              verdict,
-              reason_category: verdict === "problematic" ? reasonCategory : null,
-              notes: fields["Notes"] || null,
-              link: fields["Issue or changelog link"] || null,
-              weight,
-              created_at: new Date().toISOString(),
-            };
-            await writeJson(votePath, voteData, `Vote from ${author}: ${category}/${identitySegments.join("/")}/${version}`);
-
-            // --- 7. Recompute _verdict.json (only this one version directory, not the whole repo) ---
-            const entries = await listDir(dir);
-            let healthyCount = 0;
-            let problematicCount = 0;
-            for (const entry of entries) {
-              if (entry.name === "_verdict.json" || entry.type !== "file") continue;
-              const data = await readJson(entry.path);
-              if (!data) continue;
-              const w = typeof data.weight === "number" ? data.weight : 1;
-              if (data.verdict === "healthy") healthyCount += w;
-              else if (data.verdict === "problematic") problematicCount += w;
-            }
-
             const siteConfig = (await readJson("config/site.json")) || { quorum: 3 };
             const quorum = siteConfig.quorum;
-            const computedVerdict = {
-              healthy_count: healthyCount,
-              problematic_count: problematicCount,
-              quorum,
-              quorum_reached: healthyCount >= quorum,
-              auto_install_eligible: problematicCount === 0 && healthyCount >= quorum,
-              updated_at: new Date().toISOString(),
-            };
-            await writeJson(verdictPath, computedVerdict, `Verdict updated: ${category}/${identitySegments.join("/")}/${version}`);
 
-            // --- 8. Close out ---
+            // --- 5. Merge this vote into its jump within the to_version file,
+            // recompute just that jump's own verdict, and write the whole file
+            // back (retried on a conflicting concurrent write, see
+            // writeJsonWithRetry's own docstring). isVoteUpdate is set inside
+            // the mutator so it always reflects the freshest read, even if a
+            // conflict forced a retry. ---
+            let isVoteUpdate = false;
+            const result = await writeJsonWithRetry(
+              toVersionPath,
+              (current) => {
+                const data = current || { jumps: {} };
+                if (!data.jumps[fromVersion]) data.jumps[fromVersion] = { votes: {}, verdict: null };
+                const jump = data.jumps[fromVersion];
+                const existingVote = jump.votes[author];
+                isVoteUpdate = !!existingVote;
+                // created_at is kept from the original vote on this jump, not
+                // reset, so it still records when this person first weighed
+                // in; updated_at is only ever set once there's actually been
+                // a second vote to update it with.
+                jump.votes[author] = {
+                  verdict,
+                  reason_category: verdict === "problematic" ? reasonCategory : null,
+                  notes: fields["Notes"] || null,
+                  link: fields["Issue or changelog link"] || null,
+                  weight,
+                  created_at: (existingVote && existingVote.created_at) || new Date().toISOString(),
+                  updated_at: isVoteUpdate ? new Date().toISOString() : null,
+                };
+                let healthyCount = 0;
+                let problematicCount = 0;
+                for (const v of Object.values(jump.votes)) {
+                  const w = typeof v.weight === "number" ? v.weight : 1;
+                  if (v.verdict === "healthy") healthyCount += w;
+                  else if (v.verdict === "problematic") problematicCount += w;
+                }
+                jump.verdict = {
+                  healthy_count: healthyCount,
+                  problematic_count: problematicCount,
+                  quorum,
+                  quorum_reached: healthyCount >= quorum,
+                  auto_install_eligible: problematicCount === 0 && healthyCount >= quorum,
+                  updated_at: new Date().toISOString(),
+                };
+                return data;
+              },
+              `${author} voted on ${category}/${identitySegments.join("/")}: ${fromVersion} -> ${toVersion}`
+            );
+
+            // --- 6. Close out ---
+            const computedVerdict = result.jumps[fromVersion].verdict;
             await comment(
-              `Thanks for your vote! Current standing for \`${category}/${identitySegments.join("/")}/${version}\`: ` +
+              (isVoteUpdate ? "Your vote has been updated. " : "Thanks for your vote! ") +
+              `Current standing for \`${category}/${identitySegments.join("/")}\` (${fromVersion} -> ${toVersion}): ` +
               `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic ` +
               `(quorum: ${computedVerdict.quorum}).`
             );
