@@ -53,10 +53,13 @@ regular voting flow. Report abuse via a comment on the relevant vote issue
 
 ## Configuration
 
-`config/site.json` holds the quorum (minimum number of healthy votes before
-an update counts as "eligible for automatic installation"). See
-`ha-update-manager`'s own `FUTURE.md` for the full background on this
-requirement (100% healthy, plus quorum).
+`config/site.json` holds the quorum: the minimum number of healthy votes a
+jump needs before it counts as having enough signal to be trusted at scale.
+Each jump's own `verdict` (see `votes/README.md`) exposes `quorum`,
+`quorum_reached`, and `auto_install_eligible` (no problematic votes at all,
+and the healthy count has reached quorum) so any consuming tool can decide
+for itself whether and how to act on that signal -- this repo only tracks
+and exposes the numbers, it doesn't install anything itself.
 
 ## Tone
 

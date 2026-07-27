@@ -281,4 +281,17 @@ jobs:
               `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic ` +
               `(quorum: ${computedVerdict.quorum}).`
             );
+            // Every vote issue's title otherwise stays whatever the "[vote] "
+            // template placeholder was left as -- almost always just
+            // "[vote]" itself, since nothing prompts a voter to type
+            // anything after it. Rewritten here, not in vote.yml's own
+            // template, since the identity/jump aren't known until the
+            // fields are parsed above; only done for a successfully
+            // processed vote (an unparseable/rejected issue's own title is
+            // left alone, there's not necessarily enough valid data yet to
+            // build a good one).
+            await github.rest.issues.update({
+              owner, repo, issue_number: issue.number,
+              title: `[vote] ${category}/${identitySegments.join("/")}: ${fromVersion} -> ${toVersion}`,
+            });
             await closeIssue();
