@@ -277,6 +277,15 @@ jobs:
             const computedVerdict = result.jumps[fromVersion].verdict;
             await comment(
               (isVoteUpdate ? "Your vote has been updated. " : "Thanks for your vote! ") +
+              // Explained here, not left implicit: a maker's own "healthy"
+              // vote is recorded (weight 0, see step 4 above) but never
+              // moves the tally, and without this line the standing below
+              // just looks like the vote vanished -- found live, 2026-07-30,
+              // reported as "dit is vreemd" by a repo owner voting on their
+              // own release.
+              (weight === 0
+                ? "As the maintainer, your healthy vote is recorded but doesn't count toward the community tally (only a maintainer's problematic report does). "
+                : "") +
               `Current standing for \`${category}/${identitySegments.join("/")}\` (${fromVersion} -> ${toVersion}): ` +
               `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic ` +
               `(quorum: ${computedVerdict.quorum}).`
