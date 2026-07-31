@@ -287,8 +287,7 @@ jobs:
                 ? "As the maintainer, your healthy vote is recorded but doesn't count toward the community tally (only a maintainer's problematic report does). "
                 : "") +
               `Current standing for \`${category}/${identitySegments.join("/")}\` (${fromVersion} -> ${toVersion}): ` +
-              `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic ` +
-              `(quorum: ${computedVerdict.quorum}).`
+              `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic.`
             );
             // Every vote issue's title otherwise stays whatever the "[vote] "
             // template placeholder was left as -- almost always just
