@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   process:
-    if: contains(github.event.issue.labels.*.name, 'vote')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
@@ -105,6 +104,45 @@ jobs:
               return fields;
             }
 
+            // --- 0. Shape check, and self-apply the "vote" label --
+            // deliberately not gated on the job's own `if:` anymore (this
+            // workflow now runs on every opened issue, not just ones
+            // already labeled "vote"). Found live, issue #36: GitHub's own
+            // REST API silently drops any `labels` sent on issue *creation*
+            // unless the submitter has push access to this repo (confirmed
+            // against GitHub's own REST API docs: "Only users with push
+            // access can set labels for new issues. Labels are silently
+            // dropped otherwise."). Every real voter, by design (see
+            // ha-update-manager's own community_vote.py docstring: "any
+            // GitHub account can open an issue... regardless of
+            // collaborator status"), is exactly this kind of non-
+            // collaborator -- the repo owner's own test votes never hit
+            // this, since their own token *does* have push access, which is
+            // exactly why this went unnoticed until the first real external
+            // vote. The label can never be trusted as a *gate* again for
+            // that same reason (whether it's present depends on who
+            // submitted the issue, not what it contains), so this decides
+            // for itself, from the body's own shape, whether this looks
+            // like a real vote.yml submission -- silently doing nothing at
+            // all for anything that doesn't (a genuine bug report/question,
+            // for instance, this repo's issue tracker isn't vote-only). Both
+            // "Category" and "Verdict" checked (not just one) since either
+            // alone is a common enough word to theoretically appear in an
+            // unrelated issue.
+            const fields = parseFields(issue.body || "");
+            if (!("Category" in fields) || !("Verdict" in fields)) return;
+
+            // Applied by this Action's own token (which does have push
+            // access to its own repo, unlike a voter's), not trusted from
+            // the issue's own creation request -- see the comment above.
+            // Applied unconditionally for any vote-shaped issue, even one
+            // that turns out to be rejected below: matches this workflow's
+            // own prior behavior, back when only an already-labeled issue
+            // ever reached this far in the first place. A harmless no-op
+            // whenever the label is already there (e.g. a submitter whose
+            // own token did have push access).
+            await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ["vote"] });
+
             // --- 1. Banned check ---
             const banned = (await readJson("moderation/banned-users.json")) || [];
             if (banned.map((u) => u.toLowerCase()).includes(author.toLowerCase())) {
@@ -128,7 +166,6 @@ jobs:
             }
 
             // --- 2. Parse ---
-            const fields = parseFields(issue.body || "");
             const category = (fields["Category"] || "").trim();
             const fromVersion = normalizeVersion((fields["From version"] || "").trim());
             const toVersion = normalizeVersion((fields["To version"] || "").trim());
