@@ -1,0 +1,94 @@
+name: Check for stuck votes
+
+# Runs independently of process-vote.yml, on a schedule rather than an
+# issue event -- this is specifically a safety net for the case where
+# process-vote.yml itself failed to run to completion on a real vote
+# submission (exactly what happened with issue #36: an unhandled error
+# left the issue open, unlabeled, and unclosed, with nobody notified).
+# GitHub's own Watch/notification settings can't express "notify me on
+# issues here, except ones that are vote submissions" (no content-based
+# filtering), so watching this repo's Issues either misses a stuck vote
+# entirely (narrow watch level) or floods the inbox with every normal,
+# self-resolving vote (broad watch level). Assignment and @mentions are
+# the one thing that always notifies regardless of watch level, so this
+# reserves that specifically for the abnormal case.
+on:
+  schedule:
+    # GitHub Actions' own scheduled triggers are best-effort, not exact --
+    # under load, a run can start several minutes late. */15 is a practical
+    # balance: a stuck vote is surfaced well within the hour without
+    # polling so often that a routine, few-second scheduling delay ends up
+    # mattering.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ASSIGNEE = "klaptafel";
+            const STUCK_LABEL = "stuck-vote";
+
+            // Same split as process-vote.yml's own parseFields -- kept as
+            // its own copy here rather than a shared script file, matching
+            // this repo's existing convention of each workflow being fully
+            // self-contained.
+            function parseFields(body) {
+              const fields = {};
+              const blocks = body.split(/\n(?=### )/);
+              for (const block of blocks) {
+                const m = block.match(/^### (.+?)\n([\s\S]*)$/);
+                if (!m) continue;
+                const label = m[1].trim();
+                let value = m[2].trim();
+                if (value === "_No response_") value = "";
+                fields[label] = value;
+              }
+              return fields;
+            }
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: "open", per_page: 100,
+            });
+
+            for (const issue of issues) {
+              // listForRepo also returns pull requests; this repo doesn't
+              // really use them, but skip defensively rather than assume.
+              if (issue.pull_request) continue;
+
+              // Already flagged on an earlier scan -- assigning/commenting
+              // again every 15 minutes on the same stuck issue would just
+              // be repeat noise for the one thing this is trying to
+              // surface cleanly.
+              if (issue.labels.some((l) => (typeof l === "string" ? l : l.name) === STUCK_LABEL)) continue;
+
+              const fields = parseFields(issue.body || "");
+              if (!("Category" in fields) || !("Verdict" in fields)) continue;
+
+              // A brand-new vote issue this same scan happens to catch
+              // seconds after creation, before process-vote.yml (triggered
+              // separately, on issues:opened) has even had a chance to run
+              // yet, would otherwise look identical to a genuinely stuck
+              // one. process-vote.yml normally finishes in well under a
+              // minute, so 10 minutes of headroom is generous, not tight.
+              const ageMinutes = (Date.now() - new Date(issue.created_at).getTime()) / 60000;
+              if (ageMinutes < 10) continue;
+
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: [STUCK_LABEL] });
+              await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: [ASSIGNEE] });
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body:
+                  `@${ASSIGNEE} this looks like a vote submission, but it's still open ${Math.round(ageMinutes)} ` +
+                  "minutes after being created -- process-vote.yml normally closes a vote within seconds, so this " +
+                  "may mean it failed to run to completion on this one.",
+              });
+            }
