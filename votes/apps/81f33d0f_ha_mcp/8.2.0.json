@@ -1,0 +1,25 @@
+{
+  "jumps": {
+    "8.1.1": {
+      "votes": {
+        "Coolmanchambers": {
+          "verdict": "healthy",
+          "reason_category": null,
+          "notes": null,
+          "link": null,
+          "weight": 1,
+          "created_at": "2026-08-10T17:57:05.478Z",
+          "updated_at": null
+        }
+      },
+      "verdict": {
+        "healthy_count": 1,
+        "problematic_count": 0,
+        "quorum": 3,
+        "quorum_reached": false,
+        "auto_install_eligible": false,
+        "updated_at": "2026-08-10T17:57:05.478Z"
+      }
+    }
+  }
+}
