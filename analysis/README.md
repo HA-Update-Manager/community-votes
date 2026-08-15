@@ -9,7 +9,9 @@ request.
 
 <!-- SUMMARY:START -->
 
-_Not generated yet._
+| Total votes | Voters | Jumps rated |
+|---|---|---|
+| 45 | 6 | 41 |
 
 <!-- SUMMARY:END -->
 
