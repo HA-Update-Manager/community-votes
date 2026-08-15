@@ -61,6 +61,15 @@ and the healthy count has reached quorum) so any consuming tool can decide
 for itself whether and how to act on that signal -- this repo only tracks
 and exposes the numbers, it doesn't install anything itself.
 
+## Analysis
+
+`analysis/voters.json` is a repo-wide, automatically kept up to date view
+of who's voted, how active they are, and how often their verdict matches
+what everyone else independently concluded on the same jump. See
+`analysis/README.md` for the exact shape and how that's worked out. Not
+consumed anywhere yet; collected as future inspiration for picking a
+trusted voter.
+
 ## Tone
 
 This is a collection of user opinions, not a judgment of a project or its

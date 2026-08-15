@@ -1,0 +1,137 @@
+name: Analyze voters
+
+# Repo-wide voter activity/reliability analysis, regenerated from the
+# current votes/ files: how active is each voter, and how often does their
+# verdict on a jump agree with what everyone else on that same jump said?
+# Someone who often votes "problematic" while most other voters on the same
+# jump say "healthy" scores low here. Written for future trusted-voter
+# tooling (ha-update-manager's own trusted-voters setting) to eventually
+# draw on as inspiration -- nothing consumes analysis/voters.json yet, this
+# only keeps it collected and up to date.
+on:
+  schedule:
+    - cron: "13 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const path = require("path");
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            function walk(dir) {
+              let results = [];
+              for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+                const full = path.join(dir, entry.name);
+                if (entry.isDirectory()) results = results.concat(walk(full));
+                else if (entry.isFile() && entry.name.endsWith(".json")) results.push(full);
+              }
+              return results;
+            }
+
+            const stats = new Map();
+            function getStats(username) {
+              if (!stats.has(username)) {
+                stats.set(username, {
+                  username,
+                  total_votes: 0,
+                  healthy_votes: 0,
+                  problematic_votes: 0,
+                  agreements: 0,
+                  contradictions: 0,
+                  first_vote_at: null,
+                  last_vote_at: null,
+                });
+              }
+              return stats.get(username);
+            }
+
+            const voteFiles = walk(path.join(process.cwd(), "votes"));
+            for (const file of voteFiles) {
+              const data = JSON.parse(fs.readFileSync(file, "utf8"));
+              for (const jump of Object.values(data.jumps || {})) {
+                const entries = Object.entries(jump.votes || {});
+                for (const [username, vote] of entries) {
+                  const s = getStats(username);
+                  s.total_votes += 1;
+                  if (vote.verdict === "healthy") s.healthy_votes += 1;
+                  else if (vote.verdict === "problematic") s.problematic_votes += 1;
+
+                  const seenAt = vote.updated_at || vote.created_at;
+                  if (vote.created_at && (!s.first_vote_at || vote.created_at < s.first_vote_at)) {
+                    s.first_vote_at = vote.created_at;
+                  }
+                  if (seenAt && (!s.last_vote_at || seenAt > s.last_vote_at)) {
+                    s.last_vote_at = seenAt;
+                  }
+
+                  // Consensus of every *other* voter on this same jump,
+                  // weighted the same way process-vote.yml's own tally
+                  // already is -- a tie (including "no other voters at
+                  // all") carries no signal either way, so it's skipped
+                  // rather than forced into either bucket.
+                  let othersHealthy = 0;
+                  let othersProblematic = 0;
+                  for (const [otherUsername, otherVote] of entries) {
+                    if (otherUsername === username) continue;
+                    const w = typeof otherVote.weight === "number" ? otherVote.weight : 1;
+                    if (otherVote.verdict === "healthy") othersHealthy += w;
+                    else if (otherVote.verdict === "problematic") othersProblematic += w;
+                  }
+                  if (othersHealthy === othersProblematic) continue;
+                  const consensus = othersHealthy > othersProblematic ? "healthy" : "problematic";
+                  if (vote.verdict === consensus) s.agreements += 1;
+                  else s.contradictions += 1;
+                }
+              }
+            }
+
+            const voters = Array.from(stats.values())
+              .map((s) => ({
+                ...s,
+                reliability_score:
+                  s.agreements + s.contradictions > 0
+                    ? Math.round((s.agreements / (s.agreements + s.contradictions)) * 1000) / 1000
+                    : null,
+              }))
+              .sort((a, b) => b.total_votes - a.total_votes);
+
+            const output = { generated_at: new Date().toISOString(), voters };
+            const newContent = JSON.stringify(output, null, 2) + "\n";
+
+            const outputPath = "analysis/voters.json";
+            let sha;
+            let previousContent = null;
+            try {
+              const existing = await github.rest.repos.getContent({ owner, repo, path: outputPath });
+              sha = existing.data.sha;
+              previousContent = Buffer.from(existing.data.content, "base64").toString("utf8");
+            } catch (err) {
+              if (err.status !== 404) throw err;
+            }
+
+            // generated_at always differs run to run, so compare voters
+            // only -- an unchanged voter list shouldn't produce a new
+            // commit every single scheduled run.
+            const previousVoters = previousContent ? JSON.stringify(JSON.parse(previousContent).voters) : null;
+            if (previousVoters === JSON.stringify(voters)) {
+              console.log("No change in voter analysis, skipping commit.");
+              return;
+            }
+
+            await github.rest.repos.createOrUpdateFileContents({
+              owner, repo, path: outputPath,
+              content: Buffer.from(newContent).toString("base64"),
+              sha,
+              message: `Update voter analysis (${voters.length} voters)`,
+            });
