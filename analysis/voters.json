@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-08-15T19:07:39.573Z",
+  "voters": [
+    {
+      "username": "klaptafel",
+      "total_votes": 23,
+      "healthy_votes": 19,
+      "problematic_votes": 4,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-07-24T09:04:38.233Z",
+      "last_vote_at": "2026-08-08T14:09:14.795Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "colfin22",
+      "total_votes": 9,
+      "healthy_votes": 8,
+      "problematic_votes": 1,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-15T11:34:17.608Z",
+      "last_vote_at": "2026-08-15T11:56:41.226Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "vincent516",
+      "total_votes": 4,
+      "healthy_votes": 4,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-11T20:23:59.930Z",
+      "last_vote_at": "2026-08-11T20:24:31.253Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "antoineraulin",
+      "total_votes": 3,
+      "healthy_votes": 3,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-12T16:30:18.618Z",
+      "last_vote_at": "2026-08-12T16:30:31.653Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "Coolmanchambers",
+      "total_votes": 3,
+      "healthy_votes": 3,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-10T17:56:57.327Z",
+      "last_vote_at": "2026-08-10T17:57:05.478Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "Squixx",
+      "total_votes": 2,
+      "healthy_votes": 2,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-06T20:43:54.000Z",
+      "last_vote_at": "2026-08-13T08:43:10.007Z",
+      "reliability_score": 1
+    }
+  ]
+}
