@@ -175,27 +175,40 @@ jobs:
                     )
                     .join("\n");
 
+            // Replaces the content strictly between a start/end marker pair
+            // with freshly rendered markdown, leaving everything else in
+            // the file (including the markers themselves) untouched.
+            function replaceBetweenMarkers(content, startMarker, endMarker, markdown) {
+              const startIdx = content.indexOf(startMarker);
+              const endIdx = content.indexOf(endMarker);
+              if (startIdx === -1 || endIdx === -1) return null;
+              return content.slice(0, startIdx + startMarker.length) + "\n\n" + markdown + "\n\n" + content.slice(endIdx);
+            }
+
+            const summaryMarkdown =
+              "| Total votes | Voters | Jumps rated |\n" +
+              "|---|---|---|\n" +
+              `| ${summary.total_votes} | ${summary.total_voters} | ${summary.total_jumps_rated} |`;
+
             const readmePath = "analysis/README.md";
             const readmeExisting = await github.rest.repos.getContent({ owner, repo, path: readmePath });
             const readmeSha = readmeExisting.data.sha;
             const readmeContent = Buffer.from(readmeExisting.data.content, "base64").toString("utf8");
 
-            const startMarker = "<!-- TOP_VOTERS:START -->";
-            const endMarker = "<!-- TOP_VOTERS:END -->";
-            const startIdx = readmeContent.indexOf(startMarker);
-            const endIdx = readmeContent.indexOf(endMarker);
-            if (startIdx === -1 || endIdx === -1) {
-              core.warning("TOP_VOTERS markers not found in analysis/README.md, skipping leaderboard update.");
-              return;
+            let newReadme = replaceBetweenMarkers(readmeContent, "<!-- SUMMARY:START -->", "<!-- SUMMARY:END -->", summaryMarkdown);
+            if (newReadme === null) {
+              core.warning("SUMMARY markers not found in analysis/README.md, skipping summary update.");
+              newReadme = readmeContent;
             }
 
-            const newReadme =
-              readmeContent.slice(0, startIdx + startMarker.length) +
-              "\n\n" + tableMarkdown + "\n\n" +
-              readmeContent.slice(endIdx);
+            const updatedReadme = replaceBetweenMarkers(newReadme, "<!-- TOP_VOTERS:START -->", "<!-- TOP_VOTERS:END -->", tableMarkdown);
+            if (updatedReadme === null) {
+              core.warning("TOP_VOTERS markers not found in analysis/README.md, skipping leaderboard update.");
+            }
+            newReadme = updatedReadme === null ? newReadme : updatedReadme;
 
             if (newReadme === readmeContent) {
-              console.log("No change in top-voters table, skipping README commit.");
+              console.log("No change in analysis/README.md, skipping commit.");
               return;
             }
 
@@ -203,5 +216,5 @@ jobs:
               owner, repo, path: readmePath,
               content: Buffer.from(newReadme).toString("base64"),
               sha: readmeSha,
-              message: "Update voter leaderboard in analysis/README.md",
+              message: "Update analysis/README.md (summary + voter leaderboard)",
             });

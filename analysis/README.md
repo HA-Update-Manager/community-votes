@@ -5,6 +5,14 @@ This directory is populated by the `analyze-voters` workflow
 runnable on demand via workflow_dispatch), never directly by a pull
 request.
 
+## At a glance
+
+<!-- SUMMARY:START -->
+
+_Not generated yet._
+
+<!-- SUMMARY:END -->
+
 `voters.json` is a repo-wide, plain, public JSON file (same reading model as
 `votes/`: readable directly via `raw.githubusercontent.com`, no account or
 API rate limit needed), one entry per person who has ever voted, anywhere in
