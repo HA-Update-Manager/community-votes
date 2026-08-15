@@ -63,6 +63,6 @@ record.
 
 <!-- TOP_VOTERS:START -->
 
-_Not enough voting history yet._
+_Not enough voting history yet (each voter needs at least 3 jumps with other voters to compare against)._
 
 <!-- TOP_VOTERS:END -->
