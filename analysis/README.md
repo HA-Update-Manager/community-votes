@@ -13,6 +13,11 @@ this repo:
 ```json
 {
   "generated_at": "...",
+  "summary": {
+    "total_voters": 6,
+    "total_votes": 23,
+    "total_jumps_rated": 21
+  },
   "voters": [
     {
       "username": "...",
@@ -29,7 +34,11 @@ this repo:
 }
 ```
 
-Sorted by `total_votes`, most active first.
+`summary.total_votes` is every vote entry across every jump (the sum of
+every voter's own `total_votes`), not a distinct-jumps count -- that's
+`summary.total_jumps_rated`, kept separate since one jump can carry more
+than one person's vote. `voters` is sorted by `total_votes`, most active
+first.
 
 **How `agreements`/`contradictions`/`reliability_score` are worked out**: for
 every jump someone voted on, look at every *other* voter's own verdict on

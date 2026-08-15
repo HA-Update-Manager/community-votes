@@ -56,10 +56,13 @@ jobs:
               return stats.get(username);
             }
 
+            let totalJumpsRated = 0;
+
             const voteFiles = walk(path.join(process.cwd(), "votes"));
             for (const file of voteFiles) {
               const data = JSON.parse(fs.readFileSync(file, "utf8"));
               for (const jump of Object.values(data.jumps || {})) {
+                totalJumpsRated += 1;
                 const entries = Object.entries(jump.votes || {});
                 for (const [username, vote] of entries) {
                   const s = getStats(username);
@@ -106,7 +109,17 @@ jobs:
               }))
               .sort((a, b) => b.total_votes - a.total_votes);
 
-            const output = { generated_at: new Date().toISOString(), voters };
+            // total_votes here is every vote entry across every jump (the
+            // sum of each voter's own total_votes), not a distinct-jumps
+            // count -- that's total_jumps_rated, separate on purpose since
+            // one jump can carry several people's votes.
+            const summary = {
+              total_voters: voters.length,
+              total_votes: voters.reduce((sum, v) => sum + v.total_votes, 0),
+              total_jumps_rated: totalJumpsRated,
+            };
+
+            const output = { generated_at: new Date().toISOString(), summary, voters };
             const newContent = JSON.stringify(output, null, 2) + "\n";
 
             const outputPath = "analysis/voters.json";
