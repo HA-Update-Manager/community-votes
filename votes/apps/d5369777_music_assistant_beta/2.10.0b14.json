@@ -4,12 +4,12 @@
       "votes": {
         "colfin22": {
           "verdict": "problematic",
-          "reason_category": "breaking change",
-          "notes": "This one caused me a fair bit of grief. On 2.10.0b13 my OpenSubsonic provider pointing at Navidrome stopped working completely. Reconfiguring the provider threw type object 'Extensions' has no attribute 'STRUCTURED_LYRICS', and the same error took out provider setup and library sync.\nThe part that cost me time is that it presents as an auth failure. I went looking at my Navidrome credentials first, because that is what a provider that will not connect normally means. The credentials were fine the whole time.\nThe cause is that sonic_provider.py calls OpenSubsonicExtensions.STRUCTURED_LYRICS while the pinned py-opensonic==10.3.0 only defines SONG_LYRICS. That member does not exist at any version, so it fails every time rather than intermittently.\nI was stuck on it for a while because rolling back was not a real option. Stable 2.9.11 is a separate add-on with its own data directory, so going back would have meant rebuilding my whole setup from scratch. I ended up just waiting for a fixed build.\nWorth flagging that a missing enum member on a hot path takes out three things at once and gives no hint that it is a code bug rather than a config problem.",
+          "reason_category": "other",
+          "notes": "This one caused me a fair bit of grief. On 2.10.0b13 my OpenSubsonic provider pointing at Navidrome stopped working completely. Reconfiguring the provider threw type object 'Extensions' has no attribute 'STRUCTURED_LYRICS', and the same error took out provider setup and library sync.\nThe part that cost me time is that it presents as an auth failure. I went looking at my Navidrome credentials first, because that is what a provider that will not connect normally means. The credentials were fine the whole time.\nThe cause is that sonic_provider.py calls OpenSubsonicExtensions.STRUCTURED_LYRICS while the pinned py-opensonic==10.3.0 only defines SONG_LYRICS. That member does not exist at any version, so it fails every time rather than intermittently.\nI was stuck on it for a while because rolling back was not a real option. Stable 2.9.11 is a separate add-on with its own data directory, so going back would have meant rebuilding my whole setup from scratch. I ended up just waiting for a fixed build.\nWorth flagging that a missing enum member on a hot path takes out three things at once and gives no hint that it is a code bug rather than a config problem.\n2.10.0b15 fixed this issue s skip this one!",
           "link": null,
           "weight": 1,
           "created_at": "2026-08-15T11:38:42.013Z",
-          "updated_at": null
+          "updated_at": "2026-08-16T08:21:21.443Z"
         }
       },
       "verdict": {
@@ -18,7 +18,7 @@
         "quorum": 3,
         "quorum_reached": false,
         "auto_install_eligible": false,
-        "updated_at": "2026-08-15T11:38:42.013Z"
+        "updated_at": "2026-08-16T08:21:21.443Z"
       }
     }
   }
