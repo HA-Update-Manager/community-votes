@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-21T03:58:07.831Z",
+  "generated_at": "2026-08-22T03:53:55.266Z",
   "summary": {
-    "total_voters": 7,
-    "total_votes": 54,
-    "total_jumps_rated": 50
+    "total_voters": 8,
+    "total_votes": 63,
+    "total_jumps_rated": 58
   },
   "voters": [
     {
@@ -26,6 +26,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-15T11:34:17.608Z",
       "last_vote_at": "2026-08-20T08:57:51.568Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "Stinocon",
+      "total_votes": 9,
+      "healthy_votes": 9,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-21T12:52:56.893Z",
+      "last_vote_at": "2026-08-21T12:53:28.760Z",
       "reliability_score": 1
     },
     {
