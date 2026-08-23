@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-08-22T03:53:55.266Z",
+  "generated_at": "2026-08-23T03:57:57.829Z",
   "summary": {
     "total_voters": 8,
-    "total_votes": 63,
-    "total_jumps_rated": 58
+    "total_votes": 67,
+    "total_jumps_rated": 62
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 27,
+      "total_votes": 28,
       "healthy_votes": 22,
-      "problematic_votes": 5,
+      "problematic_votes": 6,
       "agreements": 2,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-08-17T19:31:05.185Z",
+      "last_vote_at": "2026-08-22T05:30:56.640Z",
       "reliability_score": 1
     },
     {
       "username": "colfin22",
-      "total_votes": 13,
-      "healthy_votes": 12,
+      "total_votes": 16,
+      "healthy_votes": 15,
       "problematic_votes": 1,
       "agreements": 2,
       "contradictions": 0,
       "first_vote_at": "2026-08-15T11:34:17.608Z",
-      "last_vote_at": "2026-08-20T08:57:51.568Z",
+      "last_vote_at": "2026-08-22T08:17:01.979Z",
       "reliability_score": 1
     },
     {
