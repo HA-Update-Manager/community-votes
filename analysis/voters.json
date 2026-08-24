@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-08-23T03:57:57.829Z",
+  "generated_at": "2026-08-24T04:02:43.354Z",
   "summary": {
     "total_voters": 8,
-    "total_votes": 67,
-    "total_jumps_rated": 62
+    "total_votes": 70,
+    "total_jumps_rated": 65
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 28,
-      "healthy_votes": 22,
+      "total_votes": 31,
+      "healthy_votes": 25,
       "problematic_votes": 6,
       "agreements": 2,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-08-22T05:30:56.640Z",
+      "last_vote_at": "2026-08-23T07:00:56.207Z",
       "reliability_score": 1
     },
     {
