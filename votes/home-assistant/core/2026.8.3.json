@@ -14,11 +14,11 @@
         "colfin22": {
           "verdict": "problematic",
           "reason_category": "broken functionality",
-          "notes": "Just a heads up for anyone staging 2026.8.3 in Update Manager. This release changes the default map card tiles and now shows a repeated \"API KEY REQUIRED\" watermark over the map. Nothing is broken, entities and tracking still work, it is just the map background.\n\nIt is a Home Assistant frontend issue, not something wrong with your setup. Tracked upstream here if anyone wants to follow it: https://github.com/home-assistant/core/issues/180277\n\nWanted to flag it here in case others hold off or want to know why the map looks different after this update.",
-          "link": "https://github.com/home-assistant/core/issues/180277",
+          "notes": "Just a heads up for anyone staging 2026.8.3 in Update Manager. This release changes the default map card tiles and now shows a repeated \"API KEY REQUIRED\" watermark over the map. Nothing is broken, entities and tracking still work, it is just the map background.\n\nIt is a Home Assistant frontend issue, not something wrong with your setup. Tracked upstream here if anyone wants to follow it: https://github.com/home-assistant/frontend/issues/53800\n\nWanted to flag it here in case others hold off or want to know why the map looks different after this update.",
+          "link": "https://github.com/home-assistant/frontend/issues/53800",
           "weight": 1,
           "created_at": "2026-08-29T11:40:19.851Z",
-          "updated_at": "2026-08-29T11:50:27.238Z"
+          "updated_at": "2026-08-29T11:54:05.263Z"
         }
       },
       "verdict": {
@@ -27,7 +27,7 @@
         "quorum": 3,
         "quorum_reached": false,
         "auto_install_eligible": false,
-        "updated_at": "2026-08-29T11:50:27.238Z"
+        "updated_at": "2026-08-29T11:54:05.263Z"
       }
     }
   }
