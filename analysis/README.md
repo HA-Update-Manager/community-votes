@@ -11,7 +11,7 @@ request.
 
 | Total votes | Voters | Jumps rated |
 |---|---|---|
-| 75 | 8 | 70 |
+| 82 | 8 | 76 |
 
 <!-- SUMMARY:END -->
 
@@ -82,6 +82,9 @@ record.
 
 <!-- TOP_VOTERS:START -->
 
-_Not enough voting history yet (each voter needs at least 3 jumps with other voters to compare against)._
+| # | Voter | Total votes | Reliability | Healthy | Problematic |
+|---|-------|-------------|-------------|---------|-------------|
+| 1 | @klaptafel | 32 | 67% | 25 | 7 |
+| 2 | @colfin22 | 27 | 67% | 25 | 2 |
 
 <!-- TOP_VOTERS:END -->
