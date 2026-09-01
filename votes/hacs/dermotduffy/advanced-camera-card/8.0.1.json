@@ -1,0 +1,25 @@
+{
+  "jumps": {
+    "7.27.4": {
+      "votes": {
+        "klaptafel": {
+          "verdict": "problematic",
+          "reason_category": "breaking change",
+          "notes": null,
+          "link": "https://github.com/dermotduffy/advanced-camera-card/compare/v7.27.4...v8.0.0",
+          "weight": 1,
+          "created_at": "2026-09-01T14:53:03.834Z",
+          "updated_at": null
+        }
+      },
+      "verdict": {
+        "healthy_count": 0,
+        "problematic_count": 1,
+        "quorum": 3,
+        "quorum_reached": false,
+        "auto_install_eligible": false,
+        "updated_at": "2026-09-01T14:53:03.834Z"
+      }
+    }
+  }
+}
