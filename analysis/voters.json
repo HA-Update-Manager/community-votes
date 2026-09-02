@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-09-01T08:35:04.942Z",
+  "generated_at": "2026-09-02T07:51:39.511Z",
   "summary": {
     "total_voters": 9,
-    "total_votes": 89,
-    "total_jumps_rated": 82
+    "total_votes": 92,
+    "total_jumps_rated": 85
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 33,
-      "healthy_votes": 25,
-      "problematic_votes": 8,
+      "total_votes": 35,
+      "healthy_votes": 26,
+      "problematic_votes": 9,
       "agreements": 2,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-08-30T18:49:14.891Z",
+      "last_vote_at": "2026-09-01T14:53:03.834Z",
       "reliability_score": 1
     },
     {
@@ -41,13 +41,13 @@
     },
     {
       "username": "ericreich",
-      "total_votes": 6,
-      "healthy_votes": 6,
+      "total_votes": 7,
+      "healthy_votes": 7,
       "problematic_votes": 0,
       "agreements": 0,
       "contradictions": 0,
       "first_vote_at": "2026-09-01T02:14:41.098Z",
-      "last_vote_at": "2026-09-01T02:16:14.411Z",
+      "last_vote_at": "2026-09-01T20:51:41.960Z",
       "reliability_score": null
     },
     {
