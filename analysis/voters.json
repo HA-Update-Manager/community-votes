@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-09-02T07:51:39.511Z",
+  "generated_at": "2026-09-04T05:41:26.489Z",
   "summary": {
     "total_voters": 9,
-    "total_votes": 92,
-    "total_jumps_rated": 85
+    "total_votes": 103,
+    "total_jumps_rated": 93
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 35,
-      "healthy_votes": 26,
-      "problematic_votes": 9,
-      "agreements": 2,
+      "total_votes": 42,
+      "healthy_votes": 32,
+      "problematic_votes": 10,
+      "agreements": 5,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-09-01T14:53:03.834Z",
+      "last_vote_at": "2026-09-04T05:40:05.369Z",
       "reliability_score": 1
     },
     {
       "username": "colfin22",
-      "total_votes": 27,
-      "healthy_votes": 25,
+      "total_votes": 28,
+      "healthy_votes": 26,
       "problematic_votes": 2,
       "agreements": 2,
       "contradictions": 1,
       "first_vote_at": "2026-08-15T11:34:17.608Z",
-      "last_vote_at": "2026-08-30T09:03:00.790Z",
+      "last_vote_at": "2026-09-03T17:14:24.839Z",
       "reliability_score": 0.667
     },
     {
@@ -44,11 +44,22 @@
       "total_votes": 7,
       "healthy_votes": 7,
       "problematic_votes": 0,
-      "agreements": 0,
+      "agreements": 1,
       "contradictions": 0,
       "first_vote_at": "2026-09-01T02:14:41.098Z",
       "last_vote_at": "2026-09-01T20:51:41.960Z",
-      "reliability_score": null
+      "reliability_score": 1
+    },
+    {
+      "username": "Coolmanchambers",
+      "total_votes": 6,
+      "healthy_votes": 6,
+      "problematic_votes": 0,
+      "agreements": 3,
+      "contradictions": 0,
+      "first_vote_at": "2026-08-10T17:56:57.327Z",
+      "last_vote_at": "2026-09-04T02:42:13.238Z",
+      "reliability_score": 1
     },
     {
       "username": "vincent516",
@@ -70,17 +81,6 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-12T16:30:18.618Z",
       "last_vote_at": "2026-08-12T16:30:31.653Z",
-      "reliability_score": 1
-    },
-    {
-      "username": "Coolmanchambers",
-      "total_votes": 3,
-      "healthy_votes": 3,
-      "problematic_votes": 0,
-      "agreements": 1,
-      "contradictions": 0,
-      "first_vote_at": "2026-08-10T17:56:57.327Z",
-      "last_vote_at": "2026-08-10T17:57:05.478Z",
       "reliability_score": 1
     },
     {
