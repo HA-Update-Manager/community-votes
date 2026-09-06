@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-04T05:41:26.489Z",
+  "generated_at": "2026-09-06T07:51:33.755Z",
   "summary": {
     "total_voters": 9,
-    "total_votes": 103,
-    "total_jumps_rated": 93
+    "total_votes": 110,
+    "total_jumps_rated": 100
   },
   "voters": [
     {
@@ -19,13 +19,13 @@
     },
     {
       "username": "colfin22",
-      "total_votes": 28,
-      "healthy_votes": 26,
+      "total_votes": 35,
+      "healthy_votes": 33,
       "problematic_votes": 2,
       "agreements": 2,
       "contradictions": 1,
       "first_vote_at": "2026-08-15T11:34:17.608Z",
-      "last_vote_at": "2026-09-03T17:14:24.839Z",
+      "last_vote_at": "2026-09-05T08:12:32.684Z",
       "reliability_score": 0.667
     },
     {
