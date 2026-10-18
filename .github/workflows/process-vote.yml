@@ -171,6 +171,7 @@ jobs:
             const toVersion = normalizeVersion((fields["To version"] || "").trim());
             const verdict = (fields["Verdict"] || "").trim();
             const reasonCategory = (fields["Reason category"] || "").trim();
+            const link = (fields["Issue or changelog link"] || "").trim();
 
             const VALID_CATEGORIES = ["home-assistant", "hacs", "devices", "apps"];
             const VALID_VERDICTS = ["healthy", "problematic"];
@@ -205,6 +206,18 @@ jobs:
             }
             if (verdict === "problematic" && !VALID_REASONS.includes(reasonCategory)) {
               await reject('reason category is required and must be valid when verdict is "problematic".');
+              return;
+            }
+            // This value is stored verbatim and later rendered as a real,
+            // clickable link in every Update Manager user's own dialog for
+            // this jump, on every instance -- anyone who can open a vote
+            // issue controls it, so a non-http(s) scheme (javascript:, for
+            // one) here is stored-XSS against all of them, not just a typo.
+            // Confirmed real, 2026-10-18, hacs/default PR review (frenck);
+            // Update Manager's own panel and vote command now both refuse
+            // the same thing on their own ends, this closes it here too.
+            if (link && !/^https?:\/\//i.test(link)) {
+              await reject("issue or changelog link must be a plain http(s) URL.");
               return;
             }
 
@@ -285,7 +298,7 @@ jobs:
                   verdict,
                   reason_category: verdict === "problematic" ? reasonCategory : null,
                   notes: fields["Notes"] || null,
-                  link: fields["Issue or changelog link"] || null,
+                  link: link || null,
                   weight,
                   created_at: (existingVote && existingVote.created_at) || new Date().toISOString(),
                   updated_at: isVoteUpdate ? new Date().toISOString() : null,
