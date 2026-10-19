@@ -1,0 +1,25 @@
+{
+  "jumps": {
+    "2026.10.0": {
+      "votes": {
+        "infosebas": {
+          "verdict": "problematic",
+          "reason_category": "breaking change",
+          "notes": "Reolink Home Hub rejected as \"account device\"",
+          "link": "https://github.com/home-assistant/core/issues/187148",
+          "weight": 1,
+          "created_at": "2026-10-19T11:47:38.682Z",
+          "updated_at": null
+        }
+      },
+      "verdict": {
+        "healthy_count": 0,
+        "problematic_count": 1,
+        "quorum": 3,
+        "quorum_reached": false,
+        "auto_install_eligible": false,
+        "updated_at": "2026-10-19T11:47:38.682Z"
+      }
+    }
+  }
+}
