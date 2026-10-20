@@ -1,11 +1,22 @@
 {
-  "generated_at": "2026-10-18T07:57:47.576Z",
+  "generated_at": "2026-10-20T08:26:39.082Z",
   "summary": {
-    "total_voters": 9,
-    "total_votes": 136,
-    "total_jumps_rated": 126
+    "total_voters": 10,
+    "total_votes": 138,
+    "total_jumps_rated": 128
   },
   "voters": [
+    {
+      "username": "klaptafel",
+      "total_votes": 48,
+      "healthy_votes": 36,
+      "problematic_votes": 12,
+      "agreements": 5,
+      "contradictions": 0,
+      "first_vote_at": "2026-07-24T09:04:38.233Z",
+      "last_vote_at": "2026-10-19T20:33:25.533Z",
+      "reliability_score": 1
+    },
     {
       "username": "colfin22",
       "total_votes": 48,
@@ -16,17 +27,6 @@
       "first_vote_at": "2026-08-15T11:34:17.608Z",
       "last_vote_at": "2026-09-26T07:51:20.320Z",
       "reliability_score": 0.667
-    },
-    {
-      "username": "klaptafel",
-      "total_votes": 47,
-      "healthy_votes": 35,
-      "problematic_votes": 12,
-      "agreements": 5,
-      "contradictions": 0,
-      "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-10-17T07:51:59.420Z",
-      "reliability_score": 1
     },
     {
       "username": "Coolmanchambers",
@@ -104,6 +104,17 @@
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
       "reliability_score": 1
+    },
+    {
+      "username": "infosebas",
+      "total_votes": 1,
+      "healthy_votes": 0,
+      "problematic_votes": 1,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-10-19T11:47:38.682Z",
+      "last_vote_at": "2026-10-19T11:47:38.682Z",
+      "reliability_score": null
     }
   ]
 }
