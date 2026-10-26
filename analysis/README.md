@@ -11,7 +11,7 @@ request.
 
 | Total votes | Voters | Jumps rated |
 |---|---|---|
-| 138 | 10 | 128 |
+| 143 | 11 | 133 |
 
 <!-- SUMMARY:END -->
 
