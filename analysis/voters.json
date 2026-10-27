@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-26T08:48:04.579Z",
+  "generated_at": "2026-10-27T08:54:05.793Z",
   "summary": {
     "total_voters": 11,
-    "total_votes": 143,
-    "total_jumps_rated": 133
+    "total_votes": 145,
+    "total_jumps_rated": 135
   },
   "voters": [
     {
@@ -51,6 +51,17 @@
       "reliability_score": 1
     },
     {
+      "username": "ph-dekeyser",
+      "total_votes": 7,
+      "healthy_votes": 7,
+      "problematic_votes": 0,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-10-25T17:59:25.350Z",
+      "last_vote_at": "2026-10-26T22:06:16.144Z",
+      "reliability_score": null
+    },
+    {
       "username": "ericreich",
       "total_votes": 7,
       "healthy_votes": 7,
@@ -60,17 +71,6 @@
       "first_vote_at": "2026-09-01T02:14:41.098Z",
       "last_vote_at": "2026-09-01T20:51:41.960Z",
       "reliability_score": 1
-    },
-    {
-      "username": "ph-dekeyser",
-      "total_votes": 5,
-      "healthy_votes": 5,
-      "problematic_votes": 0,
-      "agreements": 0,
-      "contradictions": 0,
-      "first_vote_at": "2026-10-25T17:59:25.350Z",
-      "last_vote_at": "2026-10-25T18:24:03.284Z",
-      "reliability_score": null
     },
     {
       "username": "vincent516",
