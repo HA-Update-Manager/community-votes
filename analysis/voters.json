@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-29T09:51:35.937Z",
+  "generated_at": "2026-10-31T09:32:18.544Z",
   "summary": {
-    "total_voters": 11,
-    "total_votes": 152,
-    "total_jumps_rated": 142
+    "total_voters": 12,
+    "total_votes": 155,
+    "total_jumps_rated": 145
   },
   "voters": [
     {
@@ -93,6 +93,17 @@
       "first_vote_at": "2026-08-12T16:30:18.618Z",
       "last_vote_at": "2026-08-12T16:30:31.653Z",
       "reliability_score": 1
+    },
+    {
+      "username": "Kurisutian",
+      "total_votes": 3,
+      "healthy_votes": 3,
+      "problematic_votes": 0,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-10-30T10:58:31.929Z",
+      "last_vote_at": "2026-10-30T11:01:20.450Z",
+      "reliability_score": null
     },
     {
       "username": "Cfrolich13",
