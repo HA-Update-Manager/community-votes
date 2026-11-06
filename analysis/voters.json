@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-05T10:46:18.074Z",
+  "generated_at": "2026-11-06T10:46:05.699Z",
   "summary": {
     "total_voters": 12,
-    "total_votes": 157,
-    "total_jumps_rated": 147
+    "total_votes": 159,
+    "total_jumps_rated": 149
   },
   "voters": [
     {
@@ -30,13 +30,13 @@
     },
     {
       "username": "ph-dekeyser",
-      "total_votes": 14,
-      "healthy_votes": 14,
+      "total_votes": 16,
+      "healthy_votes": 16,
       "problematic_votes": 0,
       "agreements": 0,
       "contradictions": 0,
       "first_vote_at": "2026-10-25T17:59:25.350Z",
-      "last_vote_at": "2026-10-28T22:11:50.901Z",
+      "last_vote_at": "2026-11-05T21:14:56.792Z",
       "reliability_score": null
     },
     {
