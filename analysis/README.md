@@ -11,7 +11,7 @@ request.
 
 | Total votes | Voters | Jumps rated |
 |---|---|---|
-| 159 | 12 | 149 |
+| 185 | 13 | 172 |
 
 <!-- SUMMARY:END -->
 
@@ -84,8 +84,8 @@ record.
 
 | # | Voter | Total votes | Reliability | Healthy | Problematic |
 |---|-------|-------------|-------------|---------|-------------|
-| 1 | @klaptafel | 50 | 100% | 38 | 12 |
+| 1 | @klaptafel | 51 | 100% | 39 | 12 |
 | 2 | @Coolmanchambers | 14 | 100% | 14 | 0 |
-| 3 | @colfin22 | 48 | 67% | 46 | 2 |
+| 3 | @colfin22 | 50 | 80% | 48 | 2 |
 
 <!-- TOP_VOTERS:END -->
