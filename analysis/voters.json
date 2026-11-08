@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-07T09:58:43.152Z",
+  "generated_at": "2026-11-08T10:12:29.602Z",
   "summary": {
-    "total_voters": 13,
-    "total_votes": 185,
-    "total_jumps_rated": 172
+    "total_voters": 14,
+    "total_votes": 187,
+    "total_jumps_rated": 174
   },
   "voters": [
     {
@@ -114,6 +114,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-10-30T10:58:31.929Z",
       "last_vote_at": "2026-10-30T11:01:20.450Z",
+      "reliability_score": null
+    },
+    {
+      "username": "DunLaoghaire1",
+      "total_votes": 2,
+      "healthy_votes": 2,
+      "problematic_votes": 0,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-08T08:07:41.813Z",
+      "last_vote_at": "2026-11-08T08:07:51.237Z",
       "reliability_score": null
     },
     {
