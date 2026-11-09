@@ -19,15 +19,24 @@
           "weight": 1,
           "created_at": "2026-11-07T08:11:45.846Z",
           "updated_at": null
+        },
+        "infosebas": {
+          "verdict": "healthy",
+          "reason_category": null,
+          "notes": null,
+          "link": null,
+          "weight": 1,
+          "created_at": "2026-11-09T13:09:00.790Z",
+          "updated_at": null
         }
       },
       "verdict": {
-        "healthy_count": 2,
+        "healthy_count": 3,
         "problematic_count": 0,
         "quorum": 3,
-        "quorum_reached": false,
-        "auto_install_eligible": false,
-        "updated_at": "2026-11-07T08:11:45.849Z"
+        "quorum_reached": true,
+        "auto_install_eligible": true,
+        "updated_at": "2026-11-09T13:09:00.795Z"
       }
     },
     "0.15.1": {
