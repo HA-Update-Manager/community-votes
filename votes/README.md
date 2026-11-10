@@ -14,6 +14,7 @@ votes/
   hacs/<owner>/<repo>/<to-version>.json
   devices/<manufacturer>/<model>/<to-version>.json
   apps/<app-slug>/<to-version>.json
+  blueprint/<owner>/<repo>/<path>/<to-version>.json
 ```
 
 Each file's shape:

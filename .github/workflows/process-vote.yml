@@ -173,7 +173,7 @@ jobs:
             const reasonCategory = (fields["Reason category"] || "").trim();
             const link = (fields["Issue or changelog link"] || "").trim();
 
-            const VALID_CATEGORIES = ["home-assistant", "hacs", "devices", "apps"];
+            const VALID_CATEGORIES = ["home-assistant", "hacs", "devices", "apps", "blueprint"];
             const VALID_VERDICTS = ["healthy", "problematic"];
             const VALID_REASONS = [
               "broken functionality",
@@ -224,7 +224,11 @@ jobs:
             // --- 3. Identity segments per category, and cross-check that
             // only the fields belonging to the chosen category were filled in.
             let identitySegments = null;
-            let hacsOwner = null;
+            // The repo owner, for hacs and blueprint alike (step 4 below)
+            // -- a maintainer's own "healthy" vote on their own release/
+            // blueprint shouldn't count toward the community tally, same
+            // conflict-of-interest reasoning either way.
+            let maintainerOwner = null;
 
             const component = (fields["Component"] || "").trim();
             const ownerRepo = (fields["Owner/repo"] || "").trim();
@@ -243,7 +247,7 @@ jobs:
                 await reject('owner/repo must be in the format "owner/repo".');
                 return;
               }
-              hacsOwner = parts[0];
+              maintainerOwner = parts[0];
               identitySegments = parts;
             } else if (category === "devices") {
               const parts = manufacturerModel.split("/");
@@ -258,6 +262,18 @@ jobs:
                 return;
               }
               identitySegments = [appSlug];
+            } else if (category === "blueprint") {
+              // owner/repo/path/to/file.yaml -- the path itself can (and
+              // usually does) contain further slashes, so this only
+              // requires at least 3 parts, not exactly 2 like the hacs
+              // owner/repo shape above.
+              const parts = ownerRepo.split("/");
+              if (parts.length < 3 || parts.some((p) => !p)) {
+                await reject('owner/repo/path must be in the format "owner/repo/path/to/blueprint.yaml".');
+                return;
+              }
+              maintainerOwner = parts[0];
+              identitySegments = parts;
             }
 
             // One flat file per destination version, holding every jump
@@ -266,9 +282,9 @@ jobs:
             // per jump or one per voter.
             const toVersionPath = ["votes", category, ...identitySegments, `${toVersion}.json`].join("/");
 
-            // --- 4. Asymmetric weight for the repo owner (hacs only) ---
+            // --- 4. Asymmetric weight for the repo owner (hacs/blueprint only) ---
             let weight = 1;
-            if (hacsOwner && author.toLowerCase() === hacsOwner.toLowerCase() && verdict === "healthy") {
+            if (maintainerOwner && author.toLowerCase() === maintainerOwner.toLowerCase() && verdict === "healthy") {
               weight = 0;
             }
 

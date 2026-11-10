@@ -30,6 +30,7 @@ body:
         - hacs
         - devices
         - apps
+        - blueprint
     validations:
       required: true
 
@@ -44,7 +45,11 @@ body:
     id: owner_repo
     attributes:
       label: Owner/repo
-      description: 'Only for category "hacs". Format: owner/repo, e.g. HA-Update-Manager/ha-update-manager'
+      description: >-
+        For category "hacs": owner/repo, e.g.
+        HA-Update-Manager/ha-update-manager. For category "blueprint":
+        owner/repo/path/to/blueprint.yaml, the blueprint's own source file
+        within that repo.
       placeholder: owner/repo
 
   - type: input
