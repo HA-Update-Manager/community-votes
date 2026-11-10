@@ -157,21 +157,30 @@ jobs:
             // more history behind it.
             const MIN_COMPARABLE_JUMPS = 3;
             const TOP_N = 10;
+            // ~12 months, a plain day-count rather than a calendar-month
+            // library -- close enough for "still active", no real need for
+            // exact month boundaries here.
+            const ACTIVE_WINDOW_DAYS = 365;
+            const activeCutoff = new Date(Date.now() - ACTIVE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
 
             const leaderboard = voters
               .filter((v) => v.agreements + v.contradictions >= MIN_COMPARABLE_JUMPS)
+              // last_vote_at is always set for anyone with a real vote
+              // (every vote entry has created_at, see getStats above), the
+              // null check is defensive only.
+              .filter((v) => v.last_vote_at && new Date(v.last_vote_at) >= activeCutoff)
               .sort((a, b) => b.reliability_score - a.reliability_score || b.total_votes - a.total_votes)
               .slice(0, TOP_N);
 
             const tableMarkdown =
               leaderboard.length === 0
-                ? `_Not enough voting history yet (each voter needs at least ${MIN_COMPARABLE_JUMPS} jumps with other voters to compare against)._`
-                : "| # | Voter | Total votes | Reliability | Healthy | Problematic |\n" +
-                  "|---|-------|-------------|-------------|---------|-------------|\n" +
+                ? `_Not enough voting history yet (each voter needs at least ${MIN_COMPARABLE_JUMPS} jumps with other voters to compare against, and a vote within the last 12 months)._`
+                : "| # | Voter | Total votes | Reliability | Healthy | Problematic | Last voted |\n" +
+                  "|---|-------|-------------|-------------|---------|-------------|------------|\n" +
                   leaderboard
                     .map(
                       (v, i) =>
-                        `| ${i + 1} | @${v.username} | ${v.total_votes} | ${Math.round(v.reliability_score * 100)}% | ${v.healthy_votes} | ${v.problematic_votes} |`
+                        `| ${i + 1} | @${v.username} | ${v.total_votes} | ${Math.round(v.reliability_score * 100)}% | ${v.healthy_votes} | ${v.problematic_votes} | ${v.last_vote_at.slice(0, 10)} |`
                     )
                     .join("\n");
 
