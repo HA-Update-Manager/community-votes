@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-08T10:12:29.602Z",
+  "generated_at": "2026-11-10T11:03:30.323Z",
   "summary": {
     "total_voters": 14,
-    "total_votes": 187,
-    "total_jumps_rated": 174
+    "total_votes": 207,
+    "total_jumps_rated": 193
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 51,
-      "healthy_votes": 39,
+      "total_votes": 56,
+      "healthy_votes": 44,
       "problematic_votes": 12,
       "agreements": 6,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-11-06T10:53:59.221Z",
+      "last_vote_at": "2026-11-10T10:56:03.550Z",
       "reliability_score": 1
     },
     {
@@ -37,6 +37,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
       "last_vote_at": "2026-11-07T08:02:39.669Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "infosebas",
+      "total_votes": 16,
+      "healthy_votes": 15,
+      "problematic_votes": 1,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-10-19T11:47:38.682Z",
+      "last_vote_at": "2026-11-09T13:11:16.987Z",
       "reliability_score": 1
     },
     {
@@ -148,17 +159,6 @@
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
       "reliability_score": 1
-    },
-    {
-      "username": "infosebas",
-      "total_votes": 1,
-      "healthy_votes": 0,
-      "problematic_votes": 1,
-      "agreements": 0,
-      "contradictions": 0,
-      "first_vote_at": "2026-10-19T11:47:38.682Z",
-      "last_vote_at": "2026-10-19T11:47:38.682Z",
-      "reliability_score": null
     }
   ]
 }
