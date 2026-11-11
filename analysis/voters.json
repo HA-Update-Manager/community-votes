@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-10T11:03:30.323Z",
+  "generated_at": "2026-11-11T10:48:32.805Z",
   "summary": {
-    "total_voters": 14,
-    "total_votes": 207,
-    "total_jumps_rated": 193
+    "total_voters": 16,
+    "total_votes": 239,
+    "total_jumps_rated": 222
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 56,
-      "healthy_votes": 44,
+      "total_votes": 66,
+      "healthy_votes": 54,
       "problematic_votes": 12,
-      "agreements": 6,
+      "agreements": 8,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-11-10T10:56:03.550Z",
+      "last_vote_at": "2026-11-11T10:36:27.049Z",
       "reliability_score": 1
     },
     {
@@ -30,13 +30,13 @@
     },
     {
       "username": "hakbjo",
-      "total_votes": 23,
-      "healthy_votes": 23,
+      "total_votes": 28,
+      "healthy_votes": 28,
       "problematic_votes": 0,
       "agreements": 1,
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
-      "last_vote_at": "2026-11-07T08:02:39.669Z",
+      "last_vote_at": "2026-11-10T21:07:25.776Z",
       "reliability_score": 1
     },
     {
@@ -73,6 +73,17 @@
       "reliability_score": 1
     },
     {
+      "username": "DunLaoghaire1",
+      "total_votes": 13,
+      "healthy_votes": 13,
+      "problematic_votes": 0,
+      "agreements": 2,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-08T08:07:41.813Z",
+      "last_vote_at": "2026-11-11T10:42:20.487Z",
+      "reliability_score": 1
+    },
+    {
       "username": "Stinocon",
       "total_votes": 9,
       "healthy_votes": 9,
@@ -92,6 +103,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-09-01T02:14:41.098Z",
       "last_vote_at": "2026-09-01T20:51:41.960Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "vincegio",
+      "total_votes": 5,
+      "healthy_votes": 5,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-10T23:08:57.095Z",
+      "last_vote_at": "2026-11-10T23:09:13.235Z",
       "reliability_score": 1
     },
     {
@@ -128,17 +150,6 @@
       "reliability_score": null
     },
     {
-      "username": "DunLaoghaire1",
-      "total_votes": 2,
-      "healthy_votes": 2,
-      "problematic_votes": 0,
-      "agreements": 0,
-      "contradictions": 0,
-      "first_vote_at": "2026-11-08T08:07:41.813Z",
-      "last_vote_at": "2026-11-08T08:07:51.237Z",
-      "reliability_score": null
-    },
-    {
       "username": "Cfrolich13",
       "total_votes": 2,
       "healthy_votes": 2,
@@ -158,6 +169,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "DunKalevra",
+      "total_votes": 1,
+      "healthy_votes": 1,
+      "problematic_votes": 0,
+      "agreements": 1,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-10T21:16:47.394Z",
+      "last_vote_at": "2026-11-10T21:16:47.394Z",
       "reliability_score": 1
     }
   ]
