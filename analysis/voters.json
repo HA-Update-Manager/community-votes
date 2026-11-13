@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-12T10:57:55.100Z",
+  "generated_at": "2026-11-13T10:52:15.462Z",
   "summary": {
     "total_voters": 16,
-    "total_votes": 246,
-    "total_jumps_rated": 228
+    "total_votes": 250,
+    "total_jumps_rated": 230
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 67,
-      "healthy_votes": 55,
+      "total_votes": 70,
+      "healthy_votes": 58,
       "problematic_votes": 12,
-      "agreements": 8,
+      "agreements": 9,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-11-11T21:16:42.474Z",
+      "last_vote_at": "2026-11-13T08:37:42.389Z",
       "reliability_score": 1
     },
     {
@@ -66,7 +66,7 @@
       "total_votes": 16,
       "healthy_votes": 16,
       "problematic_votes": 0,
-      "agreements": 2,
+      "agreements": 3,
       "contradictions": 0,
       "first_vote_at": "2026-11-08T08:07:41.813Z",
       "last_vote_at": "2026-11-11T22:18:47.129Z",
@@ -161,6 +161,17 @@
       "reliability_score": null
     },
     {
+      "username": "DunKalevra",
+      "total_votes": 2,
+      "healthy_votes": 2,
+      "problematic_votes": 0,
+      "agreements": 2,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-10T21:16:47.394Z",
+      "last_vote_at": "2026-11-13T10:05:49.714Z",
+      "reliability_score": 1
+    },
+    {
       "username": "Squixx",
       "total_votes": 2,
       "healthy_votes": 2,
@@ -169,17 +180,6 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
-      "reliability_score": 1
-    },
-    {
-      "username": "DunKalevra",
-      "total_votes": 1,
-      "healthy_votes": 1,
-      "problematic_votes": 0,
-      "agreements": 1,
-      "contradictions": 0,
-      "first_vote_at": "2026-11-10T21:16:47.394Z",
-      "last_vote_at": "2026-11-10T21:16:47.394Z",
       "reliability_score": 1
     }
   ]
