@@ -11,7 +11,7 @@ request.
 
 | Total votes | Voters | Jumps rated |
 |---|---|---|
-| 257 | 16 | 235 |
+| 270 | 16 | 245 |
 
 <!-- SUMMARY:END -->
 
@@ -87,8 +87,9 @@ whether this person is still actually around to vote today.
 | # | Voter | Total votes | Reliability | Healthy | Problematic | Last voted |
 |---|-------|-------------|-------------|---------|-------------|------------|
 | 1 | @klaptafel | 73 | 100% | 60 | 13 | 2026-11-13 |
-| 2 | @DunLaoghaire1 | 16 | 100% | 16 | 0 | 2026-11-11 |
-| 3 | @Coolmanchambers | 14 | 100% | 14 | 0 | 2026-09-21 |
-| 4 | @colfin22 | 50 | 80% | 48 | 2 | 2026-11-07 |
+| 2 | @hakbjo | 42 | 100% | 42 | 0 | 2026-11-14 |
+| 3 | @DunLaoghaire1 | 16 | 100% | 16 | 0 | 2026-11-11 |
+| 4 | @Coolmanchambers | 14 | 100% | 14 | 0 | 2026-09-21 |
+| 5 | @colfin22 | 52 | 86% | 50 | 2 | 2026-11-14 |
 
 <!-- TOP_VOTERS:END -->
