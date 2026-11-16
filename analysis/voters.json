@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-15T10:44:47.503Z",
+  "generated_at": "2026-11-16T11:04:20.512Z",
   "summary": {
-    "total_voters": 16,
-    "total_votes": 270,
-    "total_jumps_rated": 245
+    "total_voters": 17,
+    "total_votes": 271,
+    "total_jumps_rated": 246
   },
   "voters": [
     {
@@ -181,6 +181,17 @@
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
       "reliability_score": 1
+    },
+    {
+      "username": "UdiniMnu",
+      "total_votes": 1,
+      "healthy_votes": 1,
+      "problematic_votes": 0,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-15T11:36:34.683Z",
+      "last_vote_at": "2026-11-15T11:36:34.683Z",
+      "reliability_score": null
     }
   ]
 }
