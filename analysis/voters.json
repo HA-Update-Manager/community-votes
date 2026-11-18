@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-17T11:44:13.703Z",
+  "generated_at": "2026-11-18T11:32:09.206Z",
   "summary": {
-    "total_voters": 17,
-    "total_votes": 284,
-    "total_jumps_rated": 259
+    "total_voters": 18,
+    "total_votes": 290,
+    "total_jumps_rated": 264
   },
   "voters": [
     {
@@ -30,13 +30,13 @@
     },
     {
       "username": "hakbjo",
-      "total_votes": 45,
-      "healthy_votes": 45,
+      "total_votes": 50,
+      "healthy_votes": 50,
       "problematic_votes": 0,
-      "agreements": 4,
+      "agreements": 5,
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
-      "last_vote_at": "2026-11-17T10:52:05.728Z",
+      "last_vote_at": "2026-11-18T06:05:16.001Z",
       "reliability_score": 1
     },
     {
@@ -44,7 +44,7 @@
       "total_votes": 25,
       "healthy_votes": 25,
       "problematic_votes": 0,
-      "agreements": 3,
+      "agreements": 4,
       "contradictions": 0,
       "first_vote_at": "2026-11-08T08:07:41.813Z",
       "last_vote_at": "2026-11-17T10:27:15.521Z",
@@ -181,6 +181,17 @@
       "first_vote_at": "2026-08-06T20:43:54.000Z",
       "last_vote_at": "2026-08-13T08:43:10.007Z",
       "reliability_score": 1
+    },
+    {
+      "username": "paulgbrichardson",
+      "total_votes": 1,
+      "healthy_votes": 0,
+      "problematic_votes": 1,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-17T21:28:22.191Z",
+      "last_vote_at": "2026-11-17T21:28:22.191Z",
+      "reliability_score": null
     },
     {
       "username": "UdiniMnu",
