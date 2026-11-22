@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-21T10:54:49.286Z",
+  "generated_at": "2026-11-22T11:12:13.587Z",
   "summary": {
-    "total_voters": 19,
-    "total_votes": 299,
-    "total_jumps_rated": 271
+    "total_voters": 20,
+    "total_votes": 302,
+    "total_jumps_rated": 274
   },
   "voters": [
     {
@@ -148,6 +148,17 @@
       "first_vote_at": "2026-08-12T16:30:18.618Z",
       "last_vote_at": "2026-08-12T16:30:31.653Z",
       "reliability_score": 1
+    },
+    {
+      "username": "MacdiverOne",
+      "total_votes": 3,
+      "healthy_votes": 3,
+      "problematic_votes": 0,
+      "agreements": 0,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-21T21:38:01.509Z",
+      "last_vote_at": "2026-11-21T21:53:22.862Z",
+      "reliability_score": null
     },
     {
       "username": "Squixx",
