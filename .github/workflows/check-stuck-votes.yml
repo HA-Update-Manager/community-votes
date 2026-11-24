@@ -36,6 +36,13 @@ jobs:
             const repo = context.repo.repo;
             const ASSIGNEE = "klaptafel";
             const STUCK_LABEL = "stuck-vote";
+            // Only ever added once, right before the one self-heal retry
+            // below -- its presence on a *second* stuck scan is what tells
+            // this apart from a first-time stuck issue, so a submission
+            // that keeps failing for a real reason (not a resolved write
+            // race) still reaches a human after one free retry, instead of
+            // silently reopening forever every 15 minutes.
+            const RETRIED_LABEL = "firmware-version-retried";
 
             // Same split as process-vote.yml's own parseFields -- kept as
             // its own copy here rather than a shared script file, matching
@@ -90,15 +97,35 @@ jobs:
               const ageMinutes = (Date.now() - new Date(issue.created_at).getTime()) / 60000;
               if (ageMinutes < 10) continue;
 
+              // Self-heal, once: a firmware-version issue stuck for the
+              // first time is far more likely a resolved write race
+              // (process-firmware-version.yml's own retry now covers most
+              // of these on its own, but not an unlucky worst case) than a
+              // genuinely bad submission -- closing and reopening re-fires
+              // that workflow from scratch with no human needed, see its
+              // own "reopened" trigger comment.
+              const alreadyRetried = issue.labels.some(
+                (l) => (typeof l === "string" ? l : l.name) === RETRIED_LABEL
+              );
+              if (isFirmwareVersion && !alreadyRetried) {
+                await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: [RETRIED_LABEL] });
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: "closed" });
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: "open" });
+                continue;
+              }
+
               await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: [STUCK_LABEL] });
               await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: [ASSIGNEE] });
               const kind = isVote ? "vote submission" : "firmware-version submission";
               const workflowName = isVote ? "process-vote.yml" : "process-firmware-version.yml";
+              const retryNote = alreadyRetried
+                ? " An automatic retry (closing and reopening it) didn't resolve this either."
+                : "";
               await github.rest.issues.createComment({
                 owner, repo, issue_number: issue.number,
                 body:
                   `@${ASSIGNEE} this looks like a ${kind}, but it's still open ${Math.round(ageMinutes)} ` +
                   `minutes after being created -- ${workflowName} normally closes it within seconds, so this ` +
-                  "may mean it failed to run to completion on this one.",
+                  `may mean it failed to run to completion on this one.${retryNote}`,
               });
             }

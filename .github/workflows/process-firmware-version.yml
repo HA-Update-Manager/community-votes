@@ -2,7 +2,12 @@ name: Process firmware-version submission
 
 on:
   issues:
-    types: [opened]
+    # "reopened" is check-stuck-votes.yml's own self-healing retry for this
+    # workflow specifically (see that file): closing and reopening an issue
+    # that crashed mid-write re-fires this same processing from scratch,
+    # with no human in the loop, the one thing a submission issue has that
+    # a vote issue doesn't.
+    types: [opened, reopened]
 
 permissions:
   contents: write
@@ -54,7 +59,16 @@ jobs:
             // devices of the same model reporting two different newly-
             // discovered raw integers around the same time is a real
             // concurrent-write race on this same per-model file.
-            async function writeJsonWithRetry(path, mutate, message, maxAttempts = 5) {
+            // Found live, 2026-11-24: 5 attempts at a flat 200-500ms backoff
+            // wasn't enough for two genuinely different submissions landing
+            // on the same per-model file within the same couple of seconds
+            // (a real, if rare, risk even outside a burst test -- several
+            // households submitting the same popular model around the same
+            // OTA rollout) -- every attempt still correctly detected the
+            // 409 as retryable, it just ran out of attempts before the
+            // conflict cleared. Exponential backoff with jitter, capped,
+            // buys real cumulative wait time without an unbounded job.
+            async function writeJsonWithRetry(path, mutate, message, maxAttempts = 8) {
               for (let attempt = 0; attempt < maxAttempts; attempt++) {
                 let sha;
                 let current = null;
@@ -73,7 +87,8 @@ jobs:
                 } catch (err) {
                   const isConflict = err.status === 409 || err.status === 422;
                   if (!isConflict || attempt === maxAttempts - 1) throw err;
-                  await sleep(200 + Math.floor(Math.random() * 300));
+                  const backoff = Math.min(300 * 2 ** attempt, 4000);
+                  await sleep(backoff + Math.floor(Math.random() * 300));
                 }
               }
             }

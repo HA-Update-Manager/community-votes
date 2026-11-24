@@ -61,7 +61,14 @@ jobs:
             // or any non-conflict failure), this throws and the whole Action run
             // fails -- the triggering issue is simply left open/unprocessed, never
             // destroyed, same as any other exception in this workflow.
-            async function writeJsonWithRetry(path, mutate, message, maxAttempts = 5) {
+            // 5 attempts at a flat 200-500ms backoff wasn't enough for two
+            // genuinely different submissions landing on the same file
+            // within the same couple of seconds (found live on the sibling
+            // process-firmware-version.yml workflow, 2026-11-24, same
+            // writeJsonWithRetry shape) -- exponential backoff with jitter,
+            // capped, buys real cumulative wait time without an unbounded
+            // job.
+            async function writeJsonWithRetry(path, mutate, message, maxAttempts = 8) {
               for (let attempt = 0; attempt < maxAttempts; attempt++) {
                 let sha;
                 let current = null;
@@ -80,7 +87,8 @@ jobs:
                 } catch (err) {
                   const isConflict = err.status === 409 || err.status === 422;
                   if (!isConflict || attempt === maxAttempts - 1) throw err;
-                  await sleep(200 + Math.floor(Math.random() * 300));
+                  const backoff = Math.min(300 * 2 ** attempt, 4000);
+                  await sleep(backoff + Math.floor(Math.random() * 300));
                 }
               }
             }
