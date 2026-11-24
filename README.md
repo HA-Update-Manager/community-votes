@@ -44,6 +44,22 @@ destination version holds every jump (every distinct `from_version`) that's
 been rated for it, and every voter's own entry within that jump -- see
 `votes/README.md` for the exact structure.
 
+## Firmware versions
+
+A second, unrelated system lives in this same repo: a crowd-sourced mapping
+from a raw Zigbee OTA integer (what Zigbee itself reports, e.g. `16786436`)
+to its real, human-readable firmware version (what a vendor's own site shows
+for the same firmware, e.g. `1.164.2`) -- there's no reliable way to decode
+one into the other, so this exists purely to remember an observed fact once
+it's known. Unlike a vote, this isn't an opinion: the same raw integer always
+means the same real version everywhere, so a submission that conflicts with
+an already-recorded value is rejected rather than overwritten. Open a new
+issue via the "Report a real firmware version" form
+([direct link](../../issues/new?template=firmware-version.yml)), or let
+ha-update-manager do it for you automatically (same account-linking as
+voting, no additional permission). See `firmware-versions/README.md` for the
+exact structure.
+
 ## Moderation
 
 `moderation/banned-users.json` lists GitHub usernames whose votes are no

@@ -1,0 +1,61 @@
+name: Report a real firmware version
+description: Map a raw Zigbee OTA integer to its real, human-readable firmware version
+title: "[firmware-version] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Zigbee's own OTA update mechanism reports firmware versions as a plain
+        integer (e.g. 16786436), not the human-readable string a vendor's own
+        site shows for the same firmware (e.g. "1.164.2"). This maps one to the
+        other, once -- the same raw integer always means the same real version,
+        everywhere, since it's intrinsic to the firmware binary itself, not the
+        device or integration reporting it.
+
+        Already mapped, with the same value? This submission is a harmless
+        no-op. Already mapped to a *different* value? This submission is
+        rejected rather than silently overwritten -- this mapping is meant to
+        be a fixed fact, not an opinion like a vote is.
+
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      description: Exactly as Home Assistant's own device registry reports it
+      placeholder: Philips
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      description: Exactly as Home Assistant's own device registry reports it
+      placeholder: LCT024
+    validations:
+      required: true
+
+  - type: input
+    id: raw_version
+    attributes:
+      label: Raw OTA version
+      description: The plain integer Zigbee itself reports (installed_version/latest_version)
+      placeholder: "16786436"
+    validations:
+      required: true
+
+  - type: input
+    id: real_version
+    attributes:
+      label: Real firmware version
+      description: The human-readable version the vendor's own site/app shows for this exact firmware
+      placeholder: "1.164.2"
+    validations:
+      required: true
+
+  - type: input
+    id: reported_by
+    attributes:
+      label: Reported by Update Manager version
+      description: Optional, helps with triage if a batch of submissions ever turns out wrong
+      placeholder: "3.4.0"

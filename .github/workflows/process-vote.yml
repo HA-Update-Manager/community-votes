@@ -340,21 +340,17 @@ jobs:
             );
 
             // --- 6. Close out ---
-            const computedVerdict = result.jumps[fromVersion].verdict;
-            await comment(
-              (isVoteUpdate ? "Your vote has been updated. " : "Thanks for your vote! ") +
-              // Explained here, not left implicit: a maker's own "healthy"
-              // vote is recorded (weight 0, see step 4 above) but never
-              // moves the tally, and without this line the standing below
-              // just looks like the vote vanished -- found live, 2026-07-30,
-              // reported as "dit is vreemd" by a repo owner voting on their
-              // own release.
-              (weight === 0
-                ? "As the maintainer, your healthy vote is recorded but doesn't count toward the community tally (only a maintainer's problematic report does). "
-                : "") +
-              `Current standing for \`${category}/${identitySegments.join("/")}\` (${fromVersion} -> ${toVersion}): ` +
-              `${computedVerdict.healthy_count} healthy, ${computedVerdict.problematic_count} problematic.`
-            );
+            // No success comment here (removed, previously "Thanks for your
+            // vote!.../Your vote has been updated..." plus the current
+            // tally): that tally is already visible in Update Manager's own
+            // panel (community_verdict.py reads this exact same data), so
+            // the only effect of this comment was a second GitHub
+            // notification to the voter on top of the one unavoidable
+            // "issue closed" notification every voter already gets just for
+            // being the issue's own author. The reject() path just below
+            // keeps its own comment -- nothing else explains *why* a vote
+            // wasn't processed.
+            //
             // Every vote issue's title otherwise stays whatever the "[vote] "
             // template placeholder was left as -- almost always just
             // "[vote]" itself, since nothing prompts a voter to type

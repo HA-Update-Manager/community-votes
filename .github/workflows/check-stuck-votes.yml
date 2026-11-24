@@ -71,24 +71,34 @@ jobs:
               if (issue.labels.some((l) => (typeof l === "string" ? l : l.name) === STUCK_LABEL)) continue;
 
               const fields = parseFields(issue.body || "");
-              if (!("Category" in fields) || !("Verdict" in fields)) continue;
+              const isVote = "Category" in fields && "Verdict" in fields;
+              // firmware-version.yml's own submission shape (see
+              // process-firmware-version.yml) -- this safety net matters
+              // *more* here than for a vote: nobody is a human watching an
+              // automatic submission the way a human voter would
+              // eventually notice their own stuck issue.
+              const isFirmwareVersion = "Raw OTA version" in fields && "Real firmware version" in fields;
+              if (!isVote && !isFirmwareVersion) continue;
 
-              // A brand-new vote issue this same scan happens to catch
-              // seconds after creation, before process-vote.yml (triggered
+              // A brand-new issue this same scan happens to catch seconds
+              // after creation, before the matching workflow (triggered
               // separately, on issues:opened) has even had a chance to run
               // yet, would otherwise look identical to a genuinely stuck
-              // one. process-vote.yml normally finishes in well under a
-              // minute, so 10 minutes of headroom is generous, not tight.
+              // one. Both process-vote.yml and process-firmware-version.yml
+              // normally finish in well under a minute, so 10 minutes of
+              // headroom is generous, not tight.
               const ageMinutes = (Date.now() - new Date(issue.created_at).getTime()) / 60000;
               if (ageMinutes < 10) continue;
 
               await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: [STUCK_LABEL] });
               await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: [ASSIGNEE] });
+              const kind = isVote ? "vote submission" : "firmware-version submission";
+              const workflowName = isVote ? "process-vote.yml" : "process-firmware-version.yml";
               await github.rest.issues.createComment({
                 owner, repo, issue_number: issue.number,
                 body:
-                  `@${ASSIGNEE} this looks like a vote submission, but it's still open ${Math.round(ageMinutes)} ` +
-                  "minutes after being created -- process-vote.yml normally closes a vote within seconds, so this " +
+                  `@${ASSIGNEE} this looks like a ${kind}, but it's still open ${Math.round(ageMinutes)} ` +
+                  `minutes after being created -- ${workflowName} normally closes it within seconds, so this ` +
                   "may mean it failed to run to completion on this one.",
               });
             }
