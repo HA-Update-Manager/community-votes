@@ -15,8 +15,16 @@ it to its real version string:
 
 ```
 firmware-versions/
-  <manufacturer>/<model>.json
+  <manufacturer>/<model_id>.json
 ```
+
+`<model_id>`, not the generic, human-readable model description: the
+Zigbee model identifier itself (e.g. a Zigbee2MQTT device's own
+zigbee-herdsman-converters definition id), confirmed to be the right
+granularity to key this on, live -- a generic model description can be
+shared across genuinely different hardware (two real Hue motion-sensor
+models, each its own separate raw-OTA-version numbering, both showing the
+same human-readable description in a consuming client).
 
 Each file's shape:
 

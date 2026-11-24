@@ -30,7 +30,11 @@ body:
     id: model
     attributes:
       label: Model
-      description: Exactly as Home Assistant's own device registry reports it
+      description: >-
+        Home Assistant's own device registry model_id field, not model --
+        model_id is the real, unambiguous Zigbee model identifier; model is
+        just a human-readable description, which can be the same for
+        genuinely different hardware
       placeholder: LCT024
     validations:
       required: true
