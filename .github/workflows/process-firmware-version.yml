@@ -175,7 +175,13 @@ jobs:
               // "no success comment" reasoning, same as process-vote.yml's
               // own, except this fires automatically and often with no
               // human decision moment behind it at all, not even an
-              // occasional one).
+              // occasional one). Still retitled, same as the real-write
+              // path below, so this issue is just as readable in the
+              // repo's own history.
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number,
+                title: `[firmware-version] ${manufacturer}/${model}: ${rawVersionText} -> ${realVersion}`,
+              });
               await closeIssue();
               return;
             }
@@ -188,5 +194,13 @@ jobs:
             );
 
             // --- 5. Close out -- no success comment, see this workflow's
-            // own docstring-equivalent reasoning above.
+            // own docstring-equivalent reasoning above. Title rewritten the
+            // same way process-vote.yml rewrites its own (every submission
+            // otherwise keeps the exact same unhelpful "[firmware-version]"
+            // placeholder, making the repo's own issue history unreadable
+            // and unsearchable -- direct user feedback, 2026-11-24).
+            await github.rest.issues.update({
+              owner, repo, issue_number: issue.number,
+              title: `[firmware-version] ${manufacturer}/${model}: ${rawVersionText} -> ${realVersion}`,
+            });
             await closeIssue();
