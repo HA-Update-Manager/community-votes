@@ -19,20 +19,13 @@ sense.
 
 ## How to vote
 
-Open a new issue via the "Cast a vote" form
-([direct link](../../issues/new?template=vote.yml)). Fill in only the fields
-that belong to the category you pick. A GitHub Action processes your vote
-automatically: the corresponding file appears under `votes/`, and the issue
-closes with a confirmation.
-
-No account linking beyond a regular GitHub login is needed: this repo
-requires no fork and no separate app installation on your side.
+Use the vote buttons in the Home Assistant integration.
 
 A verdict is about a specific jump: the version you upgraded *from*, and the
 one you landed on, not just the destination version alone. Going from 0.1.0
 to 3.5.2 (possibly skipping several breaking changes along the way) can carry
 very different risk than going from 3.5.1 to 3.5.2, even though both land on
-the same version -- so both fields are required. You can vote once per person
+the same version, so both fields are required. You can vote once per person
 per exact jump. A second vote on the same jump overwrites your previous one
 (its own `created_at` is preserved, only `updated_at` moves).
 
@@ -41,7 +34,7 @@ per exact jump. A second vote on the same jump overwrites your previous one
 Every file under `votes/` is a plain, public JSON file, readable directly via
 `raw.githubusercontent.com`, no account or API rate limit needed. One file per
 destination version holds every jump (every distinct `from_version`) that's
-been rated for it, and every voter's own entry within that jump -- see
+been rated for it, and every voter's own entry within that jump, see
 `votes/README.md` for the exact structure.
 
 ## Firmware versions
@@ -49,14 +42,14 @@ been rated for it, and every voter's own entry within that jump -- see
 A second, unrelated system lives in this same repo: a crowd-sourced mapping
 from a raw Zigbee OTA integer (what Zigbee itself reports, e.g. `16786436`)
 to its real, human-readable firmware version (what a vendor's own site shows
-for the same firmware, e.g. `1.164.2`) -- there's no reliable way to decode
+for the same firmware, e.g. `1.164.2`). There's no reliable way to decode
 one into the other, so this exists purely to remember an observed fact once
 it's known. Unlike a vote, this isn't an opinion: the same raw integer always
 means the same real version everywhere, so a submission that conflicts with
 an already-recorded value is rejected rather than overwritten.
 
 Submitted automatically by ha-update-manager itself, via the same linked
-GitHub account already used for voting (no additional permission) -- not
+GitHub account already used for voting (no additional permission),not
 something to fill in by hand. The "Report a real firmware version" form
 exists purely as the mechanism that automatic submission goes through, not
 as an invitation to submit one yourself. See `firmware-versions/README.md`
@@ -76,7 +69,7 @@ jump needs before it counts as having enough signal to be trusted at scale.
 Each jump's own `verdict` (see `votes/README.md`) exposes `quorum`,
 `quorum_reached`, and `auto_install_eligible` (no problematic votes at all,
 and the healthy count has reached quorum) so any consuming tool can decide
-for itself whether and how to act on that signal -- this repo only tracks
+for itself whether and how to act on that signal, this repo only tracks
 and exposes the numbers, it doesn't install anything itself.
 
 ## Analysis
