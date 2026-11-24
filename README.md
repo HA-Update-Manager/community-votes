@@ -53,12 +53,14 @@ for the same firmware, e.g. `1.164.2`) -- there's no reliable way to decode
 one into the other, so this exists purely to remember an observed fact once
 it's known. Unlike a vote, this isn't an opinion: the same raw integer always
 means the same real version everywhere, so a submission that conflicts with
-an already-recorded value is rejected rather than overwritten. Open a new
-issue via the "Report a real firmware version" form
-([direct link](../../issues/new?template=firmware-version.yml)), or let
-ha-update-manager do it for you automatically (same account-linking as
-voting, no additional permission). See `firmware-versions/README.md` for the
-exact structure.
+an already-recorded value is rejected rather than overwritten.
+
+Submitted automatically by ha-update-manager itself, via the same linked
+GitHub account already used for voting (no additional permission) -- not
+something to fill in by hand. The "Report a real firmware version" form
+exists purely as the mechanism that automatic submission goes through, not
+as an invitation to submit one yourself. See `firmware-versions/README.md`
+for the exact structure.
 
 ## Moderation
 
