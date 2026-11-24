@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-23T12:22:30.896Z",
+  "generated_at": "2026-11-24T13:34:40.114Z",
   "summary": {
     "total_voters": 21,
-    "total_votes": 319,
-    "total_jumps_rated": 288
+    "total_votes": 340,
+    "total_jumps_rated": 306
   },
   "voters": [
     {
@@ -22,7 +22,7 @@
       "total_votes": 63,
       "healthy_votes": 63,
       "problematic_votes": 0,
-      "agreements": 7,
+      "agreements": 8,
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
       "last_vote_at": "2026-11-23T08:41:05.047Z",
@@ -41,13 +41,13 @@
     },
     {
       "username": "DunLaoghaire1",
-      "total_votes": 25,
-      "healthy_votes": 25,
+      "total_votes": 36,
+      "healthy_votes": 36,
       "problematic_votes": 0,
-      "agreements": 4,
+      "agreements": 5,
       "contradictions": 0,
       "first_vote_at": "2026-11-08T08:07:41.813Z",
-      "last_vote_at": "2026-11-17T10:27:15.521Z",
+      "last_vote_at": "2026-11-24T10:17:38.091Z",
       "reliability_score": 1
     },
     {
@@ -81,6 +81,17 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-10T17:56:57.327Z",
       "last_vote_at": "2026-09-21T13:22:27.406Z",
+      "reliability_score": 1
+    },
+    {
+      "username": "MacdiverOne",
+      "total_votes": 14,
+      "healthy_votes": 13,
+      "problematic_votes": 1,
+      "agreements": 5,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-21T21:38:01.509Z",
+      "last_vote_at": "2026-11-23T23:40:39.170Z",
       "reliability_score": 1
     },
     {
@@ -125,17 +136,6 @@
       "contradictions": 0,
       "first_vote_at": "2026-11-10T23:08:57.095Z",
       "last_vote_at": "2026-11-10T23:09:13.235Z",
-      "reliability_score": 1
-    },
-    {
-      "username": "MacdiverOne",
-      "total_votes": 4,
-      "healthy_votes": 3,
-      "problematic_votes": 1,
-      "agreements": 2,
-      "contradictions": 0,
-      "first_vote_at": "2026-11-21T21:38:01.509Z",
-      "last_vote_at": "2026-11-22T13:27:26.207Z",
       "reliability_score": 1
     },
     {
