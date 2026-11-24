@@ -78,6 +78,19 @@ jobs:
               }
             }
 
+            // Same normalization zigbee.py's own zigbee2mqtt_device_url
+            // already applies before using a model_id as a URL slug
+            // (verified there against zigbee2mqtt.io's own real
+            // docgen/utils.ts normalizeModel()) -- needed here for the
+            // exact same reason: some real model_ids contain "/" (found
+            // live, 2026-11-24, e.g. "8719514440937/8719514440999"), which
+            // would otherwise silently create an unintended nested
+            // directory instead of one flat file per model, since "/" is
+            // both part of the value and this path's own separator.
+            function slugifyModelId(modelId) {
+              return modelId.replace(/[/| |:]/g, "_");
+            }
+
             // Same split as process-vote.yml's own parseFields.
             function parseFields(body) {
               const fields = {};
@@ -111,8 +124,21 @@ jobs:
               return;
             }
 
-            async function reject(reason) {
+            async function reject(reason, manufacturer, model, rawVersionText, realVersion) {
               await comment(`This submission could not be processed: ${reason}`);
+              // Retitled even on rejection -- found live, 2026-11-24: a
+              // rejected issue otherwise kept the unhelpful
+              // "[firmware-version]" placeholder forever, same readability
+              // problem the success path's own title rewrite was already
+              // fixed for. Only when there's actually enough parsed data
+              // left to build a meaningful title from (an early rejection,
+              // e.g. a missing manufacturer, may not have one yet).
+              if (manufacturer && model && rawVersionText && realVersion) {
+                await github.rest.issues.update({
+                  owner, repo, issue_number: issue.number,
+                  title: `[firmware-version] ${manufacturer}/${model}: ${rawVersionText} -> ${realVersion}`,
+                });
+              }
               await closeIssue();
             }
 
@@ -131,7 +157,7 @@ jobs:
               return;
             }
             if (!/^\d+$/.test(rawVersionText) || !Number.isSafeInteger(Number(rawVersionText))) {
-              await reject("raw OTA version must be a plain, safe integer.");
+              await reject("raw OTA version must be a plain, safe integer.", manufacturer, model, rawVersionText, realVersion);
               return;
             }
             // 2-4 numeric components, optional suffix -- deliberately not
@@ -140,11 +166,17 @@ jobs:
             // constraining here risks rejecting a genuinely real string
             // for a vendor this hasn't been checked against yet.
             if (!/^\d+(\.\d+){1,3}(-.+)?$/.test(realVersion)) {
-              await reject(`real firmware version "${realVersion}" doesn't look like a version string.`);
+              await reject(
+                `real firmware version "${realVersion}" doesn't look like a version string.`,
+                manufacturer, model, rawVersionText, realVersion
+              );
               return;
             }
             if (realVersion === rawVersionText) {
-              await reject("real firmware version is identical to the raw OTA version -- that's not a real mapping.");
+              await reject(
+                "real firmware version is identical to the raw OTA version -- that's not a real mapping.",
+                manufacturer, model, rawVersionText, realVersion
+              );
               return;
             }
 
@@ -159,13 +191,14 @@ jobs:
             // callback) specifically so a conflict can comment+reject
             // instead of writing anything at all -- the mutator below only
             // ever runs once this has already passed.
-            const path = `firmware-versions/${manufacturer}/${model}.json`;
+            const path = `firmware-versions/${manufacturer}/${slugifyModelId(model)}.json`;
             const existing = (await readJson(path)) || {};
             const existingValue = existing[rawVersionText];
             if (existingValue !== undefined && existingValue !== realVersion) {
               await reject(
                 `${manufacturer}/${model}'s raw OTA version ${rawVersionText} is already mapped to ` +
-                `"${existingValue}", not overwritten with a different value.`
+                `"${existingValue}", not overwritten with a different value.`,
+                manufacturer, model, rawVersionText, realVersion
               );
               return;
             }
