@@ -179,8 +179,13 @@ jobs:
             // strict 3-part semver: Hue's own real strings are 3-part
             // ("1.164.2"), but other vendors may differ, and over-
             // constraining here risks rejecting a genuinely real string
-            // for a vendor this hasn't been checked against yet.
-            if (!/^\d+(\.\d+){1,3}(-.+)?$/.test(realVersion)) {
+            // for a vendor this hasn't been checked against yet. The
+            // suffix accepts "_" as well as "-": confirmed live,
+            // 2026-11-25, Signify/Hue's own OTA firmware strings carry a
+            // build hash after an underscore instead (e.g.
+            // "2.44.0_hBB3C188"), stored and shown as the full string,
+            // same as every other vendor's own real version already is.
+            if (!/^\d+(\.\d+){1,3}([-_].+)?$/.test(realVersion)) {
               await reject(
                 `real firmware version "${realVersion}" doesn't look like a version string.`,
                 manufacturer, model, rawVersionText, realVersion
