@@ -1,4 +1,6 @@
-[![Votes](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FHA-Update-Manager%2Fcommunity-votes%2Fmain%2Fanalysis%2Fvoters.json&query=%24.summary.total_votes&label=community%20votes&color=blue&style=for-the-badge)](https://github.com/HA-Update-Manager/community-votes)
+[![Votes](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FHA-Update-Manager%2Fcommunity-votes%2Fmain%2Fanalysis%2Fvoters.json&query=%24.summary.total_votes&label=community%20votes&color=blue&style=for-the-badge)](#)
+[![Voters](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FHA-Update-Manager%2Fcommunity-votes%2Fmain%2Fanalysis%2Fvoters.json&query=%24.summary.total_voters&label=voters&color=blue&style=for-the-badge)](#)
+[![Jumps rated](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FHA-Update-Manager%2Fcommunity-votes%2Fmain%2Fanalysis%2Fvoters.json&query=%24.summary.total_jumps_rated&label=jumps%20rated&color=blue&style=for-the-badge)](#)
 
 # community-votes
 
