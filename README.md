@@ -1,3 +1,5 @@
+[![Votes](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FHA-Update-Manager%2Fcommunity-votes%2Fmain%2Fanalysis%2Fvoters.json&query=%24.summary.total_votes&label=community%20votes&color=blue&style=for-the-badge)](https://github.com/HA-Update-Manager/community-votes)
+
 # community-votes
 
 A shared, git-based voting system: has a specific update to a Home Assistant
