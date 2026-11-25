@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-11-24T13:34:40.114Z",
+  "generated_at": "2026-11-25T12:43:49.571Z",
   "summary": {
     "total_voters": 21,
-    "total_votes": 340,
-    "total_jumps_rated": 306
+    "total_votes": 358,
+    "total_jumps_rated": 323
   },
   "voters": [
     {
       "username": "klaptafel",
-      "total_votes": 74,
-      "healthy_votes": 61,
+      "total_votes": 88,
+      "healthy_votes": 75,
       "problematic_votes": 13,
-      "agreements": 10,
+      "agreements": 11,
       "contradictions": 0,
       "first_vote_at": "2026-07-24T09:04:38.233Z",
-      "last_vote_at": "2026-11-20T08:03:43.890Z",
+      "last_vote_at": "2026-11-24T22:01:33.296Z",
       "reliability_score": 1
     },
     {
       "username": "hakbjo",
-      "total_votes": 63,
-      "healthy_votes": 63,
+      "total_votes": 65,
+      "healthy_votes": 65,
       "problematic_votes": 0,
       "agreements": 8,
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
-      "last_vote_at": "2026-11-23T08:41:05.047Z",
+      "last_vote_at": "2026-11-25T11:39:47.005Z",
       "reliability_score": 1
     },
     {
@@ -44,7 +44,7 @@
       "total_votes": 36,
       "healthy_votes": 36,
       "problematic_votes": 0,
-      "agreements": 5,
+      "agreements": 6,
       "contradictions": 0,
       "first_vote_at": "2026-11-08T08:07:41.813Z",
       "last_vote_at": "2026-11-24T10:17:38.091Z",
@@ -73,6 +73,17 @@
       "reliability_score": 1
     },
     {
+      "username": "MacdiverOne",
+      "total_votes": 16,
+      "healthy_votes": 15,
+      "problematic_votes": 1,
+      "agreements": 5,
+      "contradictions": 0,
+      "first_vote_at": "2026-11-21T21:38:01.509Z",
+      "last_vote_at": "2026-11-25T06:55:05.501Z",
+      "reliability_score": 1
+    },
+    {
       "username": "Coolmanchambers",
       "total_votes": 14,
       "healthy_votes": 14,
@@ -81,17 +92,6 @@
       "contradictions": 0,
       "first_vote_at": "2026-08-10T17:56:57.327Z",
       "last_vote_at": "2026-09-21T13:22:27.406Z",
-      "reliability_score": 1
-    },
-    {
-      "username": "MacdiverOne",
-      "total_votes": 14,
-      "healthy_votes": 13,
-      "problematic_votes": 1,
-      "agreements": 5,
-      "contradictions": 0,
-      "first_vote_at": "2026-11-21T21:38:01.509Z",
-      "last_vote_at": "2026-11-23T23:40:39.170Z",
       "reliability_score": 1
     },
     {
