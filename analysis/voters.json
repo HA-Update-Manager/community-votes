@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-26T12:19:44.940Z",
+  "generated_at": "2026-11-27T12:06:20.132Z",
   "summary": {
     "total_voters": 21,
-    "total_votes": 361,
-    "total_jumps_rated": 326
+    "total_votes": 362,
+    "total_jumps_rated": 327
   },
   "voters": [
     {
@@ -19,13 +19,13 @@
     },
     {
       "username": "hakbjo",
-      "total_votes": 65,
-      "healthy_votes": 65,
+      "total_votes": 66,
+      "healthy_votes": 66,
       "problematic_votes": 0,
       "agreements": 8,
       "contradictions": 0,
       "first_vote_at": "2026-11-07T08:00:47.972Z",
-      "last_vote_at": "2026-11-25T11:39:47.005Z",
+      "last_vote_at": "2026-11-26T16:05:30.988Z",
       "reliability_score": 1
     },
     {
